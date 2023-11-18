@@ -14,8 +14,8 @@ def read_file(file_path):
             for line in f:
                 json_data.append(json.loads(line))
 
-                if "subject_doc_id" in json_data[len(json_data)-1]:
-                    doc_uuid = json_data[len(json_data)-1]["subject_doc_id"]
+                if "env_doc_id" in json_data[len(json_data)-1]:
+                    doc_uuid = json_data[len(json_data)-1]["env_doc_id"]
 
                     content = json_data[len(json_data)-1]
 
@@ -57,14 +57,24 @@ def avid_readers(visitors):
 
     return sorted_readers[0:10]
 
-def doc_to_visitor(documents,doc_uuid):
+def doc_to_visitor(documents, doc_uuid):
     visitors = []
     for i in documents[doc_uuid]:
-        if "visitor_uuid" in i and i["visitor_uuid"] not in visitors:
-            visitors.append(i["visitor_uuid"])
+        if "visitor_uuid" in i:
+            if i["visitor_uuid"] not in visitors:
+                visitors.append(i["visitor_uuid"])
     return visitors
 
+def visitor_to_doc(documents, visitior_uuid):
+    docs = []
+    for i in documents.keys():
+        for j in documents[i]:
+            if "visitor_uuid" in j:
+                if j["visitor_uuid"] == visitior_uuid and j["visitor_uuid"] not in docs:
+                    docs.append(i)
+    return docs
+
 documents, visitors = read_file(file_path)
-a = doc_to_visitor(documents,"140224195414-e5a9acedd5eb6631bb6b39422fba6798")
+a = visitor_to_doc(documents,"04daa9ed9dde73d3")
 print(a)
 
