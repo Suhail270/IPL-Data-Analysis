@@ -8,7 +8,7 @@ def read_file(file_path):
     visitors = {}
 
     try: 
-        with open(file_path) as f:   # Read data from the file
+        with open(file_path) as f:
             json_data = []
 
             for line in f:
@@ -49,7 +49,6 @@ def avid_readers(visitors):
                     count_dict[i].append(time)
                 else:
                     count_dict[i] = [time]
-        # count_dict[i] = sum(count_dict[i]) 
 
     for i in count_dict.keys():
         count_dict[i] = sum(count_dict[i])
@@ -58,5 +57,14 @@ def avid_readers(visitors):
 
     return sorted_readers[0:10]
 
+def doc_to_visitor(documents,doc_uuid):
+    visitors = []
+    for i in documents[doc_uuid]:
+        if "visitor_uuid" in i and i["visitor_uuid"] not in visitors:
+            visitors.append(i["visitor_uuid"])
+    return visitors
 
+documents, visitors = read_file(file_path)
+a = doc_to_visitor(documents,"140224195414-e5a9acedd5eb6631bb6b39422fba6798")
+print(a)
 
