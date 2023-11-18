@@ -21,10 +21,12 @@ Maps countries to continents and counts occurrences of country in a continent.
 '''
 def group_country(countries):
 
-    # Map countries to continents using pycountry_convert
+    # Map countries to continents
     map_country = [pc.country_alpha2_to_continent_code(country) for country in countries]
+    print(map_country)
     # Convert continent codes to continent names
     country_continent = [pc.convert_continent_code_to_continent_name(continent) for continent in map_country]
+    print(country_continent)
     # Count occurrence of each continent
     continent_count = Counter(country_continent)
     return continent_count
