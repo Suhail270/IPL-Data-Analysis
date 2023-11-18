@@ -1,0 +1,7 @@
+# Project dependencies
+
+# pycountry_convert for country code conversion
+pycountry-convert==0.7.2
+
+# tkinter for GUI
+tkinter
