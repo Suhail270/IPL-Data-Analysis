@@ -1,6 +1,7 @@
 import json
 from collections import Counter
 import pycountry_convert as pc
+import tkinter as tk
 
 '''
 Counts the occurrences of each country based on the specified document UUID.
@@ -63,17 +64,17 @@ def readfile():
     file_path = './sample_small.json'
 
     try: 
-        with open(file_path) as f:   # Read data from the file
+        with open(file_path) as f:
             json_data = [json.loads(line) for line in f]
             doc_uuid = "140224195414-e5a9acedd5eb6631bb6b39422fba6798"
             part2a,countries= views_country(json_data, doc_uuid)
             part2b = group_country(countries)
             part3a = view_broswer(json_data)
             part3b = format_browser(part3a)
-            print(part2a)
-            print(part2b)
+            # print(part2a)
+            # print(part2b)
             # print(part3a)
-            print(part3b)
+            # print(part3b)
     except FileNotFoundError:
         print("The file path could not be found")
       
