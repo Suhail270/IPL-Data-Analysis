@@ -1,6 +1,5 @@
 import json
 
-
 file_path = './sample_small.json'
 
 def read_file(file_path):
@@ -11,7 +10,6 @@ def read_file(file_path):
     try: 
         with open(file_path) as f:   # Read data from the file
             json_data = []
-            doc_uuid = "140224195414-e5a9acedd5eb6631bb6b39422fba6798"
 
             for line in f:
                 json_data.append(json.loads(line))
@@ -40,5 +38,25 @@ def read_file(file_path):
     
     return documents, visitors
 
+def avid_readers(visitors):
+    count_dict = {}
 
-documents, visitors = read_file(file_path)
+    for i in visitors.keys():
+        for j in visitors[i]:
+            if "event_readtime" in j:
+                time = j["event_readtime"]
+                if i in count_dict:
+                    count_dict[i].append(time)
+                else:
+                    count_dict[i] = [time]
+        # count_dict[i] = sum(count_dict[i]) 
+
+    for i in count_dict.keys():
+        count_dict[i] = sum(count_dict[i])
+    
+    sorted_readers = sorted(count_dict.items(), key=lambda item: item[1], reverse=True)
+
+    return sorted_readers[0:10]
+
+
+
