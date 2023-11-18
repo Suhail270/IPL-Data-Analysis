@@ -2,6 +2,7 @@ import json
 from collections import Counter
 import pycountry_convert as pc
 import tkinter as tk
+import matplotlib.pyplot as plt
 
 file_path = './sample_small.json'
 
@@ -76,6 +77,31 @@ def views_country(json_data, doc_uuid):
     return country_count,countries
 
 '''
+Plots a histogram for the number of views from each country
+'''
+
+def countries_histogram(json_data, doc_uuid):
+
+    # Gets the occurence of each country using views_country. 
+    # Ignores the second value returned
+    country_count, _ = views_country(json_data, doc_uuid)
+
+    # Extract the country and its counts 
+    country, count = zip(*country_count.items())
+
+    # Plot the graph
+    plt.bar(country, count, color='#C3B1E1')
+
+    plt.xlabel('Country')
+    plt.ylabel('Number of Occurrences')
+    plt.title('Country Histogram')
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
+
+
+'''
 Maps countries to continents and counts occurrences of country in a continent.
 '''
 def group_country(countries):
@@ -91,6 +117,30 @@ def group_country(countries):
     return continent_count
 
 '''
+Plots a histogram for the number of views from each continent
+'''
+
+def continents_histogram(countries):
+
+    # Gets the occurence of each continent using group_country. 
+    continent_count = group_country(countries)
+
+    # Extract the continents and their counts 
+    continent, count = zip(*continent_count.items())
+
+    # Plot the graph
+    plt.bar(continent, count, color='#FAA0A0')
+
+    plt.xlabel('Continent')
+    plt.ylabel('Number of Occurrences')
+    plt.title('Continent Histogram')
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
+
+
+'''
 Counts the occurrences of each browser
 '''
 def view_broswer(json_data):
@@ -101,6 +151,7 @@ def view_broswer(json_data):
     # global browser_count
     browser_count = Counter(browser)
     return browser_count
+
 
 '''
 Formats browser strings to display main browser name and counts occurrences.
@@ -115,6 +166,29 @@ def format_browser(browser_count):
     # Count the occurrences of each formatted browser string
     browser_string_count = Counter(browsers)
     return browser_string_count
+
+'''
+Plots a histogram for the number of views from different browsers
+'''
+
+def format_browser_histogram(browser_count):
+
+    # Gets the occurence of each browser using view_browser.
+    format_browser_count = format_browser(browser_count)
+
+    # Extract the browsers and their counts 
+    formated_browser, count = zip(*format_browser_count.items())
+
+    # Plot the graph
+    plt.bar(formated_browser, count, color='#F8C8DC')
+
+    plt.xlabel('Formatted Browser')
+    plt.ylabel('Number of Occurrences')
+    plt.title('Formatted Browser Histogram')
+    # plt.tight_layout()
+
+    # Show the plot
+    plt.show()
 
 '''
 Additional Feature: Sorts dictionaries in descending order based on the values.
@@ -278,23 +352,60 @@ def test_also_likes(documents):
             # Print the document UUID and the result
             print(i, result)
 
+# REMOVE THE BELOW METHOD AT THE END 
 
-documents, visitors, json_data = read_file(file_path)
-doc_uuid = "130323125939-5f4318404cda4025a2463c66435ad7c8"
+# def find_doc(json_data):
+     
+#     doc_uuids_with_multiple_countries = []
 
-part2a, countries = views_country(json_data, doc_uuid)
-part2b = group_country(countries)
-part3a = view_broswer(json_data)
-part3b = format_browser(part3a)
-print(part2a)
-print(part2b)
-print(part3a)
-print(part3b)
+#     # Iterate through the JSON data
+#     for entry in json_data:
+#         doc_uuid = entry.get("subject_doc_id")
+
+#         # Call views_country to get country occurrences based on the document UUID
+#         country_count, _ = views_country(json_data, doc_uuid)
+
+#         # Check if the length of the country_count dictionary is greater than 1
+#         if len(country_count) > 1:
+#             doc_uuids_with_multiple_countries.append(doc_uuid)
+
+#     return doc_uuids_with_multiple_countries
 
 
-doc_uuid, doc_vis_count = max_unique_visitors(documents)
 
-doc_uuid = "130323125939-5f4318404cda4025a2463c66435ad7c8"
-also_likes = also_likes(documents, doc_uuid, sorting_func=sortingfunc_test)
+# documents, visitors, json_data = read_file(file_path)
+# doc_uuid = "120831070849-697c56ab376445eaadd13dbb8b6d34d0"
+
+# part2a, countries = views_country(json_data, doc_uuid)
+
+# # print(view_broswer(json_data))
+# browser_count = view_broswer(json_data)
+
+# print(format_browser_histogram(browser_count))
+
+# print(find_doc(json_data))
+
+# print(views_country(json_data, doc_uuid))
+# print(group_country(countries))
+
+# print(continents_histogram(countries))
+
+# print(countries_histogram(json_data, doc_uuid))
+
+# part2a, countries = views_country(json_data, doc_uuid)
+# part2b = group_country(countries)
+# part3a = view_broswer(json_data)
+# part3b = format_browser(part3a)
+# print(part2a)
+# print(part2b)
+# print(part3a)
+# print(part3b)
+
+
+# doc_uuid, doc_vis_count = max_unique_visitors(documents)
+
+# doc_uuid = "130323125939-5f4318404cda4025a2463c66435ad7c8"
+# also_likes = also_likes(documents, doc_uuid, sorting_func=sortingfunc_test)
 
 # print(also_likes)
+
