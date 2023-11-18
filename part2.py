@@ -70,11 +70,49 @@ def visitor_to_doc(documents, visitior_uuid):
     for i in documents.keys():
         for j in documents[i]:
             if "visitor_uuid" in j:
-                if j["visitor_uuid"] == visitior_uuid and j["visitor_uuid"] not in docs:
+                if j["visitor_uuid"] == visitior_uuid and j["env_doc_id"] not in docs:
                     docs.append(i)
     return docs
 
-documents, visitors = read_file(file_path)
-a = visitor_to_doc(documents,"04daa9ed9dde73d3")
-print(a)
+def max_unique_visitors(documents):
+    max_visitors_count = 0
+    document_with_max_visitors = None
 
+    for doc_uuid in documents:
+        visitors = doc_to_visitor(documents, doc_uuid)
+        
+        unique_visitors_count = len(visitors)
+
+        if unique_visitors_count > max_visitors_count:
+            max_visitors_count = unique_visitors_count
+            document_with_max_visitors = doc_uuid
+    return document_with_max_visitors, max_visitors_count
+
+# def also_likes(documents, doc_uuid):
+
+#     visitor_doc_relationship = {}
+#     doc_reader_count = {}
+
+#     visitors = doc_to_visitor(documents, doc_uuid)
+
+#     for visitor in visitors:
+#         visitor_doc_relationship[visitor] = visitor_to_doc(documents, visitor)
+    
+#     # print(visitor_doc_relationship.keys())
+
+#         # for document in i:
+#         #     print(document,'\n')
+
+#     # for i in visitor_doc_relationship.values():
+#     #     for document in i:
+#     #         if document not in list(doc_reader_count.keys()):
+#     #             doc_reader_count[document] = 1
+#     #         else:
+#     #             doc_reader_count[document] += 1    
+
+#     return doc_reader_count
+
+# documents, visitors = read_file(file_path)
+doc_uuid, doc_vis_count = max_unique_visitors(documents)
+# print(also_likes(documents, doc_uuid))
+print(visitor_to_doc(documents, "923f25aa749f67f6"))
