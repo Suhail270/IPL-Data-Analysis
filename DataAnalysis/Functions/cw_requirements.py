@@ -9,7 +9,6 @@ This function reads the JSON file specified by the file_path and returns the doc
 The data structures returned by this are invoked and used throughout rest of the parts.
 '''
 
-
 # file_path = '../Dataset/sample_small.json'
 
 def read_file(file_path):
@@ -83,10 +82,8 @@ def group_country(countries):
 
     # Map countries to continents
     map_country = [pc.country_alpha2_to_continent_code(country) for country in countries]
-    print(map_country)
     # Convert continent codes to continent names
     country_continent = [pc.convert_continent_code_to_continent_name(continent) for continent in map_country]
-    print(country_continent)
     # Count occurrence of each continent
     continent_count = Counter(country_continent)
     return continent_count
@@ -153,7 +150,7 @@ def avid_readers(visitors):
     sorted_readers = sortingfunc_test(count_dict)
 
     # Return the top 10 visitors with the highest total reading time
-    return sorted_readers[0:10]
+    return list(sorted_readers.keys())[0:10]
 
 '''
 Takes a document UUID and returns all visitor UUIDs of readers of that document.
@@ -221,10 +218,14 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
             else:
                 # Increment the count for the document
                 doc_reader_count[document] += 1
-    
+
     # Sort the documents based on the specified sorting function
     if sorting_func is not None:
-        doc_reader_count = sorting_func(doc_reader_count)
+        if sorting_func=='''1''':
+            doc_reader_count = sortingfunc_test(doc_reader_count, reverse=False)
+
+        elif sorting_func=='''2''':
+            doc_reader_count = sortingfunc_test(doc_reader_count, reverse=True)
 
     # Return the sorted document-reader count
     return doc_reader_count

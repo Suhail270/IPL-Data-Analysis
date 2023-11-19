@@ -39,13 +39,16 @@ def test_also_likes(documents, doc_reader_count):
 Additional Feature: Sorts dictionaries in descending order based on the values.
 '''
 
-def sortingfunc_test(doc_reader_count, reverse=True):
+def sortingfunc_test(doc_reader_count, reverse):
+
+    print("######")
 
     if type(doc_reader_count) is dict:
-        # Sort the document-reader count dictionary based on the count in descending order
-        return dict(sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=True))
+        # Sort the document-reader count dictionary based on the count
+        return dict(sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse))
     else:
-        return sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=True)
+        # Sort the list of tuples based on the count
+        return sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse)
     
 def find_doc(json_data, country_count):
      

@@ -52,6 +52,26 @@ def continents_histogram(countries):
 Plots a histogram for the number of views from different browsers
 '''
 
+def browser_histogram(browser_count):
+
+    # Extract the browsers and their counts 
+    browser, count = zip(*browser_count.items())
+
+    # Plot the graph
+    plt.bar(browser, count, color='#F8C8DC')
+
+    plt.xlabel('Browser')
+    plt.ylabel('Number of Occurrences')
+    plt.title('Browser Histogram')
+    # plt.tight_layout()
+
+    # Show the plot
+    plt.show()
+
+'''
+Plots a histogram for the number of views from different browsers (formatted)
+'''
+
 def format_browser_histogram(browser_count):
 
     # Gets the occurence of each browser using view_browser.
