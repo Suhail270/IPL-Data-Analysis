@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from part2 import views_country, group_country, format_browser
+from Functions.cw_requirements import views_country, group_country, format_browser
 
 '''
 Plots a histogram for the number of views from each country
