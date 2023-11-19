@@ -3,6 +3,7 @@ from collections import Counter
 import pycountry_convert as pc
 import tkinter as tk
 
+
 file_path = './sample_small.json'
 
 '''
@@ -75,6 +76,8 @@ def views_country(json_data, doc_uuid):
     country_count = Counter(countries)
     return country_count,countries
 
+
+
 '''
 Maps countries to continents and counts occurrences of country in a continent.
 '''
@@ -90,6 +93,7 @@ def group_country(countries):
     continent_count = Counter(country_continent)
     return continent_count
 
+
 '''
 Counts the occurrences of each browser
 '''
@@ -101,6 +105,7 @@ def view_broswer(json_data):
     # global browser_count
     browser_count = Counter(browser)
     return browser_count
+
 
 '''
 Formats browser strings to display main browser name and counts occurrences.
@@ -279,22 +284,60 @@ def test_also_likes(documents):
             print(i, result)
 
 
-documents, visitors, json_data = read_file(file_path)
-doc_uuid = "130323125939-5f4318404cda4025a2463c66435ad7c8"
+# REMOVE THE BELOW METHOD AT THE END 
 
-part2a, countries = views_country(json_data, doc_uuid)
-part2b = group_country(countries)
-part3a = view_broswer(json_data)
-part3b = format_browser(part3a)
-print(part2a)
-print(part2b)
-print(part3a)
-print(part3b)
+# def find_doc(json_data):
+     
+#     doc_uuids_with_multiple_countries = []
+
+#     # Iterate through the JSON data
+#     for entry in json_data:
+#         doc_uuid = entry.get("subject_doc_id")
+
+#         # Call views_country to get country occurrences based on the document UUID
+#         country_count, _ = views_country(json_data, doc_uuid)
+
+#         # Check if the length of the country_count dictionary is greater than 1
+#         if len(country_count) > 1:
+#             doc_uuids_with_multiple_countries.append(doc_uuid)
+
+#     return doc_uuids_with_multiple_countries
 
 
-doc_uuid, doc_vis_count = max_unique_visitors(documents)
 
-doc_uuid = "130323125939-5f4318404cda4025a2463c66435ad7c8"
-also_likes = also_likes(documents, doc_uuid, sorting_func=sortingfunc_test)
+# documents, visitors, json_data = read_file(file_path)
+# doc_uuid = "120831070849-697c56ab376445eaadd13dbb8b6d34d0"
+
+# part2a, countries = views_country(json_data, doc_uuid)
+
+# # print(view_broswer(json_data))
+# browser_count = view_broswer(json_data)
+
+# print(format_browser_histogram(browser_count))
+
+# print(find_doc(json_data))
+
+# print(views_country(json_data, doc_uuid))
+# print(group_country(countries))
+
+# print(continents_histogram(countries))
+
+# print(countries_histogram(json_data, doc_uuid))
+
+# part2a, countries = views_country(json_data, doc_uuid)
+# part2b = group_country(countries)
+# part3a = view_broswer(json_data)
+# part3b = format_browser(part3a)
+# print(part2a)
+# print(part2b)
+# print(part3a)
+# print(part3b)
+
+
+# doc_uuid, doc_vis_count = max_unique_visitors(documents)
+
+# doc_uuid = "130323125939-5f4318404cda4025a2463c66435ad7c8"
+# also_likes = also_likes(documents, doc_uuid, sorting_func=sortingfunc_test)
 
 # print(also_likes)
+
