@@ -12,7 +12,6 @@ import tkinter as tk
 
 LARGE_FONT= ("Helvetica", 14)
 
-
 class DataVisualise(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -76,10 +75,10 @@ class CountryPlot(tk.Frame):
 
         doc_uuid_label = tk.Label(self, text="Document UUID:")
         doc_uuid_label.pack(pady=5)
-        doc_uuid_entry = tk.Entry(self, width=50)
-        doc_uuid_entry.pack(pady=10)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
 
-        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(doc_uuid_entry.get()))
+        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
 
         fig, ax = plt.subplots()
@@ -89,13 +88,23 @@ class CountryPlot(tk.Frame):
         self.canvas.get_tk_widget().pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(HomePage))
+                            command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
 
-        # button2 = tk.Button(self, text="Page Two",
-        #                     command=lambda: controller.show_frame(ContinentPlot))
-        # button2.pack()
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
 
+        # Create a new empty plot on the current axis
+        fig, ax = plt.subplots()
+        ax.clear()
+
+        # Clear the text box
+        self.doc_uuid_entry.delete(0, tk.END)
+
+        # Update the canvas with the new empty plot
+        self.canvas.figure = fig
+        self.canvas.draw()
     
     def plot_country_histogram(self, doc_uuid):
         # Get documents, visitors, and json_data from the file
