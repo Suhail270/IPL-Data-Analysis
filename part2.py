@@ -2,7 +2,7 @@ import json
 from collections import Counter
 import pycountry_convert as pc
 import tkinter as tk
-import matplotlib.pyplot as plt
+
 
 file_path = './sample_small.json'
 
@@ -76,29 +76,6 @@ def views_country(json_data, doc_uuid):
     country_count = Counter(countries)
     return country_count,countries
 
-'''
-Plots a histogram for the number of views from each country
-'''
-
-def countries_histogram(json_data, doc_uuid):
-
-    # Gets the occurence of each country using views_country. 
-    # Ignores the second value returned
-    country_count, _ = views_country(json_data, doc_uuid)
-
-    # Extract the country and its counts 
-    country, count = zip(*country_count.items())
-
-    # Plot the graph
-    plt.bar(country, count, color='#C3B1E1')
-
-    plt.xlabel('Country')
-    plt.ylabel('Number of Occurrences')
-    plt.title('Country Histogram')
-    plt.tight_layout()
-
-    # Show the plot
-    plt.show()
 
 
 '''
@@ -115,29 +92,6 @@ def group_country(countries):
     # Count occurrence of each continent
     continent_count = Counter(country_continent)
     return continent_count
-
-'''
-Plots a histogram for the number of views from each continent
-'''
-
-def continents_histogram(countries):
-
-    # Gets the occurence of each continent using group_country. 
-    continent_count = group_country(countries)
-
-    # Extract the continents and their counts 
-    continent, count = zip(*continent_count.items())
-
-    # Plot the graph
-    plt.bar(continent, count, color='#FAA0A0')
-
-    plt.xlabel('Continent')
-    plt.ylabel('Number of Occurrences')
-    plt.title('Continent Histogram')
-    plt.tight_layout()
-
-    # Show the plot
-    plt.show()
 
 
 '''
@@ -166,29 +120,6 @@ def format_browser(browser_count):
     # Count the occurrences of each formatted browser string
     browser_string_count = Counter(browsers)
     return browser_string_count
-
-'''
-Plots a histogram for the number of views from different browsers
-'''
-
-def format_browser_histogram(browser_count):
-
-    # Gets the occurence of each browser using view_browser.
-    format_browser_count = format_browser(browser_count)
-
-    # Extract the browsers and their counts 
-    formated_browser, count = zip(*format_browser_count.items())
-
-    # Plot the graph
-    plt.bar(formated_browser, count, color='#F8C8DC')
-
-    plt.xlabel('Formatted Browser')
-    plt.ylabel('Number of Occurrences')
-    plt.title('Formatted Browser Histogram')
-    # plt.tight_layout()
-
-    # Show the plot
-    plt.show()
 
 '''
 Additional Feature: Sorts dictionaries in descending order based on the values.
@@ -351,6 +282,7 @@ def test_also_likes(documents):
         if len(list(result.keys())) > 1:
             # Print the document UUID and the result
             print(i, result)
+
 
 # REMOVE THE BELOW METHOD AT THE END 
 
