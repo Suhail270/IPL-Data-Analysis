@@ -1,36 +1,136 @@
 import tkinter as tk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from part2 import read_file, file_path
+from graphs import countries_histogram
 
 '''
 GUI for the program 
 '''
+import tkinter as tk
 
-def create_tkinter_gui():
-    # Create the main window
-    root = tk.Tk()
-    root.title("Data Visualization")
 
-    # Set window size and position
-    window_width = 700
-    window_height = 400
-    window_x = (root.winfo_screenwidth() - window_width) // 2  # Center horizontally
-    window_y = (root.winfo_screenheight() - window_height) // 2  # Center vertically
-    root.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
+LARGE_FONT= ("Helvetica", 14)
 
-    # Heading
-    heading_label = tk.Label(root, text="What would you like to visualise?", font=("Helvetica", 14))
-    heading_label.pack(pady=10)
 
-    # Buttons
-    button1 = tk.Button(root, text="Country Histogram")
-    button1.pack(pady=10)
+class DataVisualise(tk.Tk):
 
-    button2 = tk.Button(root, text="Continent Histogram")
-    button2.pack(pady=10)
+    def __init__(self, *args, **kwargs):
+        
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self)
 
-    button3 = tk.Button(root, text="Formatted Browser Histogram")
-    button3.pack(pady=10)
+        container.pack(side="top", fill="both", expand = True)
 
-    # Start the Tkinter event loop
-    root.mainloop()
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
-create_tkinter_gui()
+        self.frames = {}
+
+        for F in (HomePage, CountryPlot, ContinentPlot):
+
+            frame = F(container, self)
+
+            self.frames[F] = frame
+
+            frame.grid(row=0, column=0, sticky="nsew")
+
+            container.grid_rowconfigure(0, weight=1)
+            container.grid_columnconfigure(0, weight=1)
+
+        self.show_frame(HomePage)
+
+        window_width = 700
+        window_height = 800
+        self.geometry(f"{window_width}x{window_height}+600+100")
+
+    def show_frame(self, cont):
+
+        frame = self.frames[cont]
+        frame.tkraise()
+
+        
+class HomePage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="What would you like to visualise?", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button = tk.Button(self, text="Countries Histogram",
+                            command=lambda: controller.show_frame(CountryPlot))
+        button.pack(pady=10)
+
+        button2 = tk.Button(self, text="Continent Histogram",
+                            command=lambda: controller.show_frame(ContinentPlot))
+        button2.pack(pady=10)
+
+
+class CountryPlot(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        label = tk.Label(self, text="The number of viewers from each country for the document:", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        doc_uuid_label = tk.Label(self, text="Document UUID:")
+        doc_uuid_label.pack(pady=5)
+        doc_uuid_entry = tk.Entry(self, width=50)
+        doc_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(doc_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
+        fig, ax = plt.subplots()
+        ax.clear()
+        # Add a canvas to display the plot
+        self.canvas = FigureCanvasTkAgg(fig, master=self)
+        self.canvas.get_tk_widget().pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+        # button2 = tk.Button(self, text="Page Two",
+        #                     command=lambda: controller.show_frame(ContinentPlot))
+        # button2.pack()
+
+    
+    def plot_country_histogram(self, doc_uuid):
+        # Get documents, visitors, and json_data from the file
+        documents, visitors, json_data = read_file(file_path)
+
+        # Plot the country histogram for the specified document UUID
+        fig, ax = countries_histogram(json_data, doc_uuid)
+
+        self.canvas.figure = fig
+        self.canvas.draw()
+
+
+class ContinentPlot(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="The number of viewers from each continent for the document:", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+        # button2 = tk.Button(self, text="Page One",
+        #                     command=lambda: controller.show_frame(CountryPlot))
+        # button2.pack()
+        
+
+
+app = DataVisualise()
+
+# window_width = 700
+# window_height = 500
+# window_x = (app.winfo_screenwidth() - window_width) // 2  # Center horizontally
+# window_y = (app.winfo_screenheight() - window_height) // 2  # Center vertically
+# app.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
+
+app.mainloop()

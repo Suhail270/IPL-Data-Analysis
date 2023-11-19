@@ -14,6 +14,7 @@ def countries_histogram(json_data, doc_uuid):
     # Extract the country and its counts 
     country, count = zip(*country_count.items())
 
+    fig, ax = plt.subplots()
     # Plot the graph
     plt.bar(country, count, color='#C3B1E1')
 
@@ -22,8 +23,8 @@ def countries_histogram(json_data, doc_uuid):
     plt.title('Country Histogram')
     plt.tight_layout()
 
-    # Show the plot
-    plt.show()
+    # Return the figure and axis.
+    return fig, ax
 
 '''
 Plots a histogram for the number of views from each continent
