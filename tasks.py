@@ -1,6 +1,9 @@
 import json
 from collections import Counter
 import pycountry_convert as pc
+import user_agent
+# from user_agent import parse
+from ua_parser import user_agent_parser
 
 '''
 Counts the occurrences of each country based on the specified document UUID.
@@ -48,14 +51,26 @@ Formats browser strings to display main browser name and counts occurrences.
 '''  
 def format_browser(browser_count):
 
-    #Empty list to string formatted browser strings
-    browsers = []
+    #Empty list to store formatted browser strings
+    browser_string = {}
     for char in browser_count:
-        browser_string = char.split('/')[0] # Split each browser string at the first '/' character and take the first part
-        browsers.append(browser_string)
-    # Count the occurrences of each formatted browser string
-    browser_string_count = Counter(browsers)
-    return browser_string_count
+        # Use the user_agent_parser library to parse the user-agent string.
+        user_agent = user_agent_parser.Parse(char)
+        # Check if the browser family extracted from the user-agent is already
+        # present in the 'browser_string' dictionary.
+        if user_agent['user_agent']['family'] not in browser_string:
+            # If not present, add a new entry with the browser family as the key
+            # and the count from the original dictionary as the value.
+            browser_string[user_agent['user_agent']['family']] = browser_count[char]
+        else:
+            # If the browser family is already present, increment the count
+            # by the count from the original dictionary.
+            browser_string[user_agent['user_agent']['family']] += browser_count[char] 
+    # Update the input dictionary 'browser_count' with the aggregated counts.
+    browser_count = browser_string
+    return browser_count
+
+    
 
 
 def readfile():
@@ -70,8 +85,8 @@ def readfile():
             part2b = group_country(countries)
             part3a = view_broswer(json_data)
             part3b = format_browser(part3a)
-            print(part2a)
-            print(part2b)
+            # print(part2a)
+            # print(part2b)
             # print(part3a)
             print(part3b)
     except FileNotFoundError:
