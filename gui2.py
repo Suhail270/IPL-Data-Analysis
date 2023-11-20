@@ -1,8 +1,8 @@
 import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from .cw_requirements import read_file
-from .graphs import countries_histogram
+from part2 import read_file, file_path
+from graphs import countries_histogram
 
 '''
 GUI for the program 
@@ -132,15 +132,8 @@ class ContinentPlot(tk.Frame):
         #                     command=lambda: controller.show_frame(CountryPlot))
         # button2.pack()
         
-def startGUI():
-    app = DataVisualise()
-    global file_path
-    file_path = 'Dataset/sample_small.json'
 
-    # window_width = 700
-    # window_height = 500
-    # window_x = (app.winfo_screenwidth() - window_width) // 2  # Center horizontally
-    # window_y = (app.winfo_screenheight() - window_height) // 2  # Center vertically
-    # app.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
 
-    app.mainloop()
+app = DataVisualise()
+
+app.mainloop()
