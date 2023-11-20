@@ -60,7 +60,7 @@ class DataVisualise(tk.Tk):
 class HomePage(tk.Frame):
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self,parent, bg='white')
+        tk.Frame.__init__(self,parent)
         label = tk.Label(self, text="What would you like to visualise?", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
@@ -76,7 +76,7 @@ class HomePage(tk.Frame):
 class CountryPlot(tk.Frame):
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, bg='white')
+        tk.Frame.__init__(self, parent)
 
         label = tk.Label(self, text="The number of viewers from each country for the document:", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
@@ -93,14 +93,13 @@ class CountryPlot(tk.Frame):
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
 
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(3, 2))
         # ax.clear()
 
         # # Add a canvas to display the plot
         self.canvas = FigureCanvasTkAgg(master=self)
-        # # self.canvas.get_tk_widget().config(width=500, height=300)
-        self.canvas.get_tk_widget().pack(pady=10, expand=True, fill=tk.BOTH
-        )
+        # self.canvas.get_tk_widget().config(width=50, height=30)
+        self.canvas.get_tk_widget().pack()
 
         ax.clear()
 
@@ -110,7 +109,7 @@ class CountryPlot(tk.Frame):
         controller.show_frame(HomePage)
 
         # Create a new empty plot on the current axis
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(3, 2))
         ax.clear()
 
         # Clear the text box
