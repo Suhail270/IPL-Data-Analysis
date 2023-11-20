@@ -17,18 +17,9 @@ class DataVisualise(tk.Tk):
     def __init__(self, *args, **kwargs):
         
         tk.Tk.__init__(self, *args, **kwargs)
-        # Set the width and height as a percentage of the screen dimensions
-        width_percentage = 0.5  # Adjust as needed
-        height_percentage = 0.5  # Adjust as needed
+        container = tk.Frame(self)
 
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-
-        window_width = int(screen_width * width_percentage)
-        window_height = int(screen_height * height_percentage)
-
-        container = tk.Frame(self, width=window_width, height=window_height)
-        container.pack(side="top", fill="both", expand=True)
+        container.pack(side="top", expand = True)
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
@@ -98,15 +89,15 @@ class CountryPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
 
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10)
+
         fig, ax = plt.subplots()
         ax.clear()
         # Add a canvas to display the plot
         self.canvas = FigureCanvasTkAgg(fig, master=self)
         self.canvas.get_tk_widget().pack(pady=10)
-
-        button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: self.back_to_home(controller))
-        button1.pack(pady=10)
 
     def back_to_home(self, controller):
         # Show the home page
