@@ -60,7 +60,7 @@ class DataVisualise(tk.Tk):
 class HomePage(tk.Frame):
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self,parent)
+        tk.Frame.__init__(self,parent, bg='white')
         label = tk.Label(self, text="What would you like to visualise?", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
@@ -76,7 +76,7 @@ class HomePage(tk.Frame):
 class CountryPlot(tk.Frame):
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg='white')
 
         label = tk.Label(self, text="The number of viewers from each country for the document:", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
@@ -94,11 +94,16 @@ class CountryPlot(tk.Frame):
         button1.pack(pady=10)
 
         fig, ax = plt.subplots()
+        # ax.clear()
+
+        # # Add a canvas to display the plot
+        self.canvas = FigureCanvasTkAgg(master=self)
+        # # self.canvas.get_tk_widget().config(width=500, height=300)
+        self.canvas.get_tk_widget().pack(pady=10, expand=True, fill=tk.BOTH
+        )
+
         ax.clear()
-        # Add a canvas to display the plot
-        self.canvas = FigureCanvasTkAgg(fig, master=self)
-        self.canvas.get_tk_widget().config(width=500, height=300)
-        self.canvas.get_tk_widget().pack(pady=10)
+
 
     def back_to_home(self, controller):
         # Show the home page

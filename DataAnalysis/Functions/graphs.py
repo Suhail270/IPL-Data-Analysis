@@ -15,7 +15,7 @@ def countries_histogram(json_data, doc_uuid):
     country, count = zip(*country_count.items())
     # print(country, count)
 
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig, ax = plt.subplots(figsize=(6, 4))
     # Plot the graph
     plt.hist(country,bins = len(country), color='#C3B1E1', weights=count)
 
