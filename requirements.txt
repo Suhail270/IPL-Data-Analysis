@@ -1,0 +1,13 @@
+# Project dependencies
+
+# pycountry_convert for country code conversion
+pycountry-convert
+
+# Tkinter for GUI
+tkinter
+
+# For plotting graphs
+matplotlib
+
+# For accessing command-line arguments
+argparse
