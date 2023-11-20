@@ -97,6 +97,7 @@ class CountryPlot(tk.Frame):
         ax.clear()
         # Add a canvas to display the plot
         self.canvas = FigureCanvasTkAgg(fig, master=self)
+        self.canvas.get_tk_widget().config(width=500, height=300)
         self.canvas.get_tk_widget().pack(pady=10)
 
     def back_to_home(self, controller):
