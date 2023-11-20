@@ -134,6 +134,7 @@ if __name__ == "__main__":
         nullParser.parse_args()
         print("Starting GUI...")
         startGUI()
+        print("@@@@@@@@@@@@@@")
     
     except:
         args = parse_arguments()

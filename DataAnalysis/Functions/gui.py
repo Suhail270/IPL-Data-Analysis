@@ -17,9 +17,18 @@ class DataVisualise(tk.Tk):
     def __init__(self, *args, **kwargs):
         
         tk.Tk.__init__(self, *args, **kwargs)
-        container = tk.Frame(self)
+        # Set the width and height as a percentage of the screen dimensions
+        width_percentage = 0.5  # Adjust as needed
+        height_percentage = 0.5  # Adjust as needed
 
-        container.pack(side="top", fill="both", expand = True)
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        window_width = int(screen_width * width_percentage)
+        window_height = int(screen_height * height_percentage)
+
+        container = tk.Frame(self, width=window_width, height=window_height)
+        container.pack(side="top", fill="both", expand=True)
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
@@ -39,12 +48,20 @@ class DataVisualise(tk.Tk):
 
         self.show_frame(HomePage)
 
-        window_width = 700
-        window_height = 800
-        self.geometry(f"{window_width}x{window_height}+600+100")
+        # window_width = 0.5
+        # window_height = 0.5
+        # self.frame.place(rely = window_width, relx = window_height)
+        # self.geometry(f"{window_width}x{window_height}+600+100")
+        
+        # window_width = (self.winfo_screenwidth()) // 1.25
+        # window_height = (self.winfo_screenwidth()) // 2.5
+        # window_x = (self.winfo_screenwidth()) // 2  # Center horizontally
+        # window_y = (self.winfo_screenheight()) // 2  # Center vertically
+        # self.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
+
+        # self.frame.place(rely = 0.5, relx = 0.5)
 
     def show_frame(self, cont):
-
         frame = self.frames[cont]
         frame.tkraise()
 
