@@ -3,6 +3,7 @@ from collections import Counter
 import pycountry_convert as pc
 import tkinter as tk
 from .additional import sortingfunc_test
+from ua_parser import user_agent_parser
 
 '''
 This function reads the JSON file specified by the file_path and returns the documents, visitors, and the entire JSON data.
@@ -107,14 +108,24 @@ Formats browser strings to display main browser name and counts occurrences.
 '''  
 def format_browser(browser_count):
 
-    #Empty list to string formatted browser strings
-    browsers = []
+    #Empty list to store formatted browser strings
+    browser_string = {}
     for char in browser_count:
-        browser_string = char.split('/')[0] # Split each browser string at the first '/' character and take the first part
-        browsers.append(browser_string)
-    # Count the occurrences of each formatted browser string
-    browser_string_count = Counter(browsers)
-    return browser_string_count
+        # Use the user_agent_parser library to parse the user-agent string.
+        user_agent = user_agent_parser.Parse(char)
+        # Check if the browser family extracted from the user-agent is already
+        # present in the 'browser_string' dictionary.
+        if user_agent['user_agent']['family'] not in browser_string:
+            # If not present, add a new entry with the browser family as the key
+            # and the count from the original dictionary as the value.
+            browser_string[user_agent['user_agent']['family']] = browser_count[char]
+        else:
+            # If the browser family is already present, increment the count
+            # by the count from the original dictionary.
+            browser_string[user_agent['user_agent']['family']] += browser_count[char] 
+    # Update the input dictionary 'browser_count' with the aggregated counts.
+    browser_count = browser_string
+    return browser_count
 
 '''
 Identifies the most avid readers. It determines, for each user, the total time spent reading documents. The top 10 readers, 
