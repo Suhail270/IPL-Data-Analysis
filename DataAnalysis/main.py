@@ -20,8 +20,14 @@ from Functions.graphs import (countries_histogram,
                      browser_histogram,
                      format_browser_histogram)
 
+from Functions.gui import startGUI
+
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
 # Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 5d -f Dataset/sample_small.json
+
+'''
+Defines the syntax for passing command line arguments. Failure to adhering to this syntax will raise an exception.
+'''
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Execute different functions based on task id.')
@@ -29,8 +35,11 @@ def parse_arguments():
     parser.add_argument('-d', '--doc_uuid', required=True, help='Document UUID')
     parser.add_argument('-t', '--task_id', required=True, help='Task ID')
     parser.add_argument('-f', '--file_name', required=True, help='File name')
-
     return parser.parse_args()
+
+'''
+Executes function based on the task id passed.
+'''
 
 def execute_task(args):
     file_path = args.file_name
@@ -116,5 +125,16 @@ Enter Option (1 or 2): ''')
         print("\nSorting Function: {sort}".format(sort=sorting_text))
 
 if __name__ == "__main__":
-    args = parse_arguments()
-    execute_task(args)
+    
+    # If no command line arguments are passed, the GUI is invoked.
+    
+    nullParser = argparse.ArgumentParser()
+
+    try:
+        nullParser.parse_args()
+        print("Starting GUI...")
+        startGUI()
+    
+    except:
+        args = parse_arguments()
+        execute_task(args)
