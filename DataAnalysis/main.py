@@ -25,8 +25,7 @@ from Functions.graphs import (countries_histogram,
 from Functions.gui import startGUI
 
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
-# Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 5d -f Dataset/sample_small.json
-# Example usage - python3.11 main.py -u aaa4eaf77abab0b2 -d 120831070849-697c56ab376445eaadd13dbb8b6d34d0 -t 2a -f Dataset/sample_small.json
+# Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 5d -f Dataset/sample_small.json# Example usage - python3.11 main.py -u aaa4eaf77abab0b2 -d 120831070849-697c56ab376445eaadd13dbb8b6d34d0 -t 2a -f Dataset/sample_small.json
 
 '''
 Defines the syntax for passing command line arguments. Failure to adhering to this syntax will raise an exception.
