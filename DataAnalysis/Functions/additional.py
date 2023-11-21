@@ -41,8 +41,6 @@ Additional Feature: Sorts dictionaries in descending order based on the values.
 
 def sortingfunc_test(doc_reader_count, reverse):
 
-    print("######")
-
     if type(doc_reader_count) is dict:
         # Sort the document-reader count dictionary based on the count
         return dict(sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse))
@@ -63,3 +61,19 @@ def find_doc(json_data, country_count):
             doc_uuids_with_multiple_countries.append(doc_uuid)
 
     return doc_uuids_with_multiple_countries
+
+def validation(doc_uuid=None, visitor_uuid=None, documents=None, visitors=None):
+    valid = True
+    # Check if the document UUID is valid
+    if doc_uuid is not None and doc_uuid is not None:
+        if doc_uuid not in documents:
+            print("\nInvalid document UUID. Please try again.\n")
+            valid = False
+    
+    # Check if the visitor UUID is valid
+    if visitor_uuid is not None and visitors is not None:
+        if visitor_uuid not in visitors:
+            print("\nInvalid visitor UUID. Please try again.\n")
+            valid = False
+    
+    return valid

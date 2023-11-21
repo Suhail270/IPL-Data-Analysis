@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 from Functions.cw_requirements import (doc_to_visitor, 
                               also_likes, 
@@ -13,7 +14,8 @@ from Functions.cw_requirements import (doc_to_visitor,
 from Functions.additional import (max_unique_visitors, 
                          test_also_likes, 
                          sortingfunc_test, 
-                         find_doc)
+                         find_doc,
+                         validation)
 
 from Functions.graphs import (countries_histogram, 
                      continents_histogram, 
@@ -47,6 +49,11 @@ def execute_task(args):
     visitor_uuid = args.user_uuid
     
     documents, visitors, json_data = read_file(file_path)
+
+    valid = validation(doc_uuid=doc_uuid, documents=documents, visitor_uuid=visitor_uuid, visitors=visitors)
+
+    if valid == False:
+        sys.exit(1)
 
     if args.task_id == "2a":
         countries_histogram(json_data, doc_uuid)
