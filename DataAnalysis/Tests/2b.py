@@ -1,0 +1,1 @@
+'''python3.11 main.py -u aaa4eaf77abab0b2 -d 120831070849-697c56ab376445eaadd13dbb8b6d34d0 -t 2b -f Dataset/sample_small.json'''
