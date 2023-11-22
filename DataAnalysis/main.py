@@ -33,11 +33,25 @@ Defines the syntax for passing command line arguments. Failure to adhering to th
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Execute different functions based on task id.')
-    parser.add_argument('-u', '--user_uuid', required=True, help='User UUID')
-    parser.add_argument('-d', '--doc_uuid', required=True, help='Document UUID')
-    parser.add_argument('-t', '--task_id', required=True, help='Task ID')
-    parser.add_argument('-f', '--file_name', required=True, help='File name')
-    return parser.parse_args()
+    parser.add_argument('-u', '--user_uuid', help='User UUID')
+    parser.add_argument('-d', '--doc_uuid', help='Document UUID')
+    parser.add_argument('-t', '--task_id', help='Task ID')
+    parser.add_argument('-f', '--file_name', help='File name')
+
+    args = parser.parse_args()
+
+     # Check if either all or none of the arguments are provided
+    all_arguments_present = all(vars(args).values())
+    none_of_the_arguments_present = not any(vars(args).values())
+
+    if not (all_arguments_present or none_of_the_arguments_present):
+        parser.error('''\n\nIf you would like to start the GUI, enter no arguments. Your terminal command should be:
+python main.py.
+      
+If you would like to execute a function, please enter all arguments. Your terminal command should be:
+python main.py -u <user_uuid> -d <doc_uuid> -t <task_id> -f <file_name>.\n\n''')
+
+    return args
 
 '''
 Executes function based on the task id passed.
@@ -133,15 +147,16 @@ Enter Option (1 or 2): ''')
 
 if __name__ == "__main__":
     
-    # If no command line arguments are passed, the GUI is invoked.
-    
-    nullParser = argparse.ArgumentParser()
-
     try:
-        nullParser.parse_args()
-        print("Starting GUI...")
-        startGUI()
-    
-    except:
+        # If no command line arguments are passed, the GUI is invoked.
         args = parse_arguments()
-        execute_task(args)
+
+        if not any(vars(args).values()):
+            print("Starting GUI...")
+            startGUI()
+        else:
+            execute_task(args)
+    
+    except Exception as e:
+        print(e)
+        sys.exit(1)
