@@ -12,7 +12,7 @@ from Functions.cw_requirements import (doc_to_visitor,
                               avid_readers)
 
 from Functions.additional import (max_unique_visitors, 
-                         test_also_likes, 
+                         also_likes_testing, 
                          sortingfunc_test, 
                          find_doc,
                          validation)

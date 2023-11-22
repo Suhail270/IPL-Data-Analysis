@@ -26,7 +26,7 @@ Additional Feature: Goes through the dataset until it finds records that are sui
 and prints them.
 '''
 
-def test_also_likes(documents, doc_reader_count):
+def also_likes_testing(documents, doc_reader_count):
     # Iterate through each document UUID in the documents dictionary
     for i in documents.keys():
         # Get the result of the also_likes function for the current document UUID
@@ -67,13 +67,14 @@ def validation(doc_uuid=None, visitor_uuid=None, documents=None, visitors=None):
     # Check if the document UUID is valid
     if doc_uuid is not None and doc_uuid is not None:
         if doc_uuid not in documents:
-            print("\nInvalid document UUID. Please try again.\n")
-            valid = False
+            valid = "document"
     
     # Check if the visitor UUID is valid
     if visitor_uuid is not None and visitors is not None:
         if visitor_uuid not in visitors:
-            print("\nInvalid visitor UUID. Please try again.\n")
-            valid = False
-    
-    return valid
+            valid = "visitor"     
+
+    if valid is not True:
+        raise Exception("Invalid {x} UUID. Please try again.".format(x=valid))
+    else:       
+        return valid

@@ -54,7 +54,7 @@ def read_file(file_path):
 
     except FileNotFoundError:
         # Handle the case where the specified file path is not found
-        print("File does not exist at specified location.")
+        raise Exception("File does not exist at specified location.")
 
 '''
 Counts the occurrences of each country based on the specified document UUID.
