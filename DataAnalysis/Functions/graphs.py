@@ -72,11 +72,7 @@ def browser_histogram(browser_count):
 Plots a histogram for the number of views from different browsers (formatted)
 '''
 
-def format_browser_histogram(browser_count):
-
-    # Gets the occurence of each browser using view_browser.
-    format_browser_count = format_browser(browser_count)
-
+def format_browser_histogram(format_browser_count):
     # Extract the browsers and their counts 
     formated_browser, count = zip(*format_browser_count.items())
 
