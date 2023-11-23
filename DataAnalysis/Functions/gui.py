@@ -19,7 +19,7 @@ class DataVisualise(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
 
-        container.pack(side="top", expand = True)
+        container.pack(side="top", fill="both", expand = True)
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
@@ -39,20 +39,12 @@ class DataVisualise(tk.Tk):
 
         self.show_frame(HomePage)
 
-        # window_width = 0.5
-        # window_height = 0.5
-        # self.frame.place(rely = window_width, relx = window_height)
-        # self.geometry(f"{window_width}x{window_height}+600+100")
-        
-        # window_width = (self.winfo_screenwidth()) // 1.25
-        # window_height = (self.winfo_screenwidth()) // 2.5
-        # window_x = (self.winfo_screenwidth()) // 2  # Center horizontally
-        # window_y = (self.winfo_screenheight()) // 2  # Center vertically
-        # self.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
-
-        # self.frame.place(rely = 0.5, relx = 0.5)
+        window_width = 700
+        window_height = 800
+        self.geometry(f"{window_width}x{window_height}+600+100")
 
     def show_frame(self, cont):
+
         frame = self.frames[cont]
         frame.tkraise()
 
@@ -89,27 +81,22 @@ class CountryPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
 
+        fig, ax = plt.subplots()
+        ax.clear()
+        # Add a canvas to display the plot
+        self.canvas = FigureCanvasTkAgg(fig, master=self)
+        self.canvas.get_tk_widget().pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
-
-        fig, ax = plt.subplots(figsize=(3, 2))
-        # ax.clear()
-
-        # # Add a canvas to display the plot
-        self.canvas = FigureCanvasTkAgg(master=self)
-        # self.canvas.get_tk_widget().config(width=50, height=30)
-        self.canvas.get_tk_widget().pack()
-
-        ax.clear()
-
 
     def back_to_home(self, controller):
         # Show the home page
         controller.show_frame(HomePage)
 
         # Create a new empty plot on the current axis
-        fig, ax = plt.subplots(figsize=(3, 2))
+        fig, ax = plt.subplots()
         ax.clear()
 
         # Clear the text box
@@ -157,4 +144,3 @@ def startGUI():
     # app.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
 
     app.mainloop()
-
