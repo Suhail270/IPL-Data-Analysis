@@ -96,4 +96,6 @@ def format_browser_histogram(browser_count):
     # plt.tight_layout()
 
     # Show the plot
-    plt.show()
+    histFormatBrowser = plt.show()
+
+    return histFormatBrowser
