@@ -171,10 +171,6 @@ Enter Option (1 or 2): ''')
         for i in list(result.keys()):
             print("{time}: {num} views".format(time=i, num=result[i]))
 
-    # elif args.task_id == "6d":
-    #     ip
-
-
 if __name__ == "__main__":
     
     try:
