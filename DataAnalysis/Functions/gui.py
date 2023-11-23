@@ -40,8 +40,10 @@ class DataVisualise(tk.Tk):
         self.show_frame(HomePage)
 
         window_width = 700
-        window_height = 800
-        self.geometry(f"{window_width}x{window_height}+600+100")
+        window_height = 500
+        window_x = (self.winfo_screenwidth() - window_width) // 2
+        window_y = (self.winfo_screenheight() - window_height) // 2
+        self.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
 
     def show_frame(self, cont):
 
@@ -53,7 +55,7 @@ class HomePage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        label = tk.Label(self, text="What would you like to visualise?", font=LARGE_FONT)
+        label = tk.Label(self, text="What would you like to visualize?", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
         button = tk.Button(self, text="Countries Histogram",
@@ -81,11 +83,11 @@ class CountryPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
 
-        fig, ax = plt.subplots()
-        ax.clear()
-        # Add a canvas to display the plot
-        self.canvas = FigureCanvasTkAgg(fig, master=self)
-        self.canvas.get_tk_widget().pack(pady=10)
+        # fig, ax = plt.subplots()
+        # ax.clear()
+        # # Add a canvas to display the plot
+        # self.canvas = FigureCanvasTkAgg(fig, master=self)
+        # self.canvas.get_tk_widget().pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
@@ -96,25 +98,25 @@ class CountryPlot(tk.Frame):
         controller.show_frame(HomePage)
 
         # Create a new empty plot on the current axis
-        fig, ax = plt.subplots()
-        ax.clear()
+        # fig, ax = plt.subplots()
+        # ax.clear()
 
         # Clear the text box
         self.doc_uuid_entry.delete(0, tk.END)
 
         # Update the canvas with the new empty plot
-        self.canvas.figure = fig
-        self.canvas.draw()
+        # self.canvas.figure = fig
+        # self.canvas.draw()
     
     def plot_country_histogram(self, doc_uuid):
         # Get documents, visitors, and json_data from the file
         documents, visitors, json_data = read_file(file_path)
 
         # Plot the country histogram for the specified document UUID
-        fig, ax = countries_histogram(json_data, doc_uuid)
+        countries_histogram(json_data, doc_uuid)
 
-        self.canvas.figure = fig
-        self.canvas.draw()
+        # self.canvas.figure = fig
+        # self.canvas.draw()
 
 
 class ContinentPlot(tk.Frame):

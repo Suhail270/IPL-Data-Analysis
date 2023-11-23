@@ -24,10 +24,10 @@ def countries_histogram(json_data, doc_uuid):
     plt.title('Country Histogram')
     plt.tight_layout()
 
-    # plt.show()
+    hist = plt.show()
 
     # Return the figure and axis.
-    return fig, ax
+    return hist
 
 
 '''
