@@ -2,7 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file
-from .graphs import countries_histogram
+from .graphs import countries_histogram, views_country, continents_histogram
 
 '''
 GUI for the program 
@@ -97,13 +97,12 @@ class CountryPlot(tk.Frame):
         # Show the home page
         controller.show_frame(HomePage)
 
+        # Clear the text box
+        self.doc_uuid_entry.delete(0, tk.END)
+        
         # Create a new empty plot on the current axis
         # fig, ax = plt.subplots()
         # ax.clear()
-
-        # Clear the text box
-        self.doc_uuid_entry.delete(0, tk.END)
-
         # Update the canvas with the new empty plot
         # self.canvas.figure = fig
         # self.canvas.draw()
@@ -126,13 +125,28 @@ class ContinentPlot(tk.Frame):
         label = tk.Label(self, text="The number of viewers from each continent for the document:", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
+        doc_uuid_label = tk.Label(self, text="Document UUID:")
+        doc_uuid_label.pack(pady=5)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_continent_histogram(self.doc_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(HomePage))
+                            command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
 
-        # button2 = tk.Button(self, text="Page One",
-        #                     command=lambda: controller.show_frame(CountryPlot))
-        # button2.pack()
+    def plot_continent_histogram(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        _, countries = views_country(json_data, doc_uuid)
+        continents_histogram(countries)
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.doc_uuid_entry.delete(0, tk.END)
         
 def startGUI():
     app = DataVisualise()

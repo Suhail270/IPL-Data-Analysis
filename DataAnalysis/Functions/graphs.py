@@ -24,10 +24,10 @@ def countries_histogram(json_data, doc_uuid):
     plt.title('Country Histogram')
     plt.tight_layout()
 
-    hist = plt.show()
+    hist_country = plt.show()
 
     # Return the figure and axis.
-    return hist
+    return hist_country
 
 
 '''
@@ -51,7 +51,9 @@ def continents_histogram(countries):
     plt.tight_layout()
 
     # Show the plot
-    plt.show()
+    hist_continent = plt.show()
+
+    return hist_continent
 
 '''
 Plots a histogram for the number of views from different browsers
