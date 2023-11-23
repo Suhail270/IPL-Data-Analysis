@@ -96,6 +96,7 @@ def format_browser_histogram(browser_count):
     plt.xlabel('Formatted Browser')
     plt.xticks(rotation=90)
     plt.ylabel('Number of Occurrences')
+    plt.subplots_adjust(bottom=0.483)
     plt.title('Formatted Browser Histogram')
     # plt.tight_layout()
 

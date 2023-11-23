@@ -206,10 +206,4 @@ def startGUI():
     global file_path
     file_path = 'Dataset/sample_small.json'
 
-    # window_width = 700
-    # window_height = 500
-    # window_x = (app.winfo_screenwidth() - window_width) // 2  # Center horizontally
-    # window_y = (app.winfo_screenheight() - window_height) // 2  # Center vertically
-    # app.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
-
     app.mainloop()
