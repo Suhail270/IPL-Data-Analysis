@@ -27,7 +27,7 @@ from Functions.graphs import (countries_histogram,
 from Functions.gui import startGUI
 
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
-# Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 6a -f Dataset/sample_small.json
+# Example usage - python3.11 main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 6a -f Dataset/sample_small.json
 
 '''
 Defines the syntax for passing command line arguments. Failure to adhering to this syntax will raise an exception.
@@ -84,7 +84,12 @@ def execute_task(args):
     
     elif args.task_id == "3b":
         browser_count = view_broswer(json_data)
-        format_browser_histogram(browser_count)
+        # Gets the occurence of each browser using view_browser.
+        format_browser_count = format_browser(browser_count)
+        print("All Broswers:\n")
+        for i in format_browser_count:
+            print("{browser}: {count}".format(browser=i, count=format_browser_count[i]))
+        format_browser_histogram(format_browser_count)
 
     elif args.task_id == "4":
         top_10 = avid_readers(visitors)
@@ -162,10 +167,13 @@ Enter Option (1 or 2): ''')
     elif args.task_id == "6c":
         documents_visited = visitor_to_doc(documents, visitor_uuid)
         result = most_popular_time_visitors(documents_visited, documents)
-        print(result)
         print("Most Popular Times for visitor {visitor_uuid}:\n".format(visitor_uuid=visitor_uuid))
         for i in list(result.keys()):
             print("{time}: {num} views".format(time=i, num=result[i]))
+
+    # elif args.task_id == "6d":
+    #     ip
+
 
 if __name__ == "__main__":
     
