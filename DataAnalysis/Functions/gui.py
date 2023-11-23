@@ -1,8 +1,8 @@
 import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from .cw_requirements import read_file
-from .graphs import countries_histogram
+from .cw_requirements import read_file, view_broswer, views_country
+from .graphs import countries_histogram, continents_histogram, format_browser_histogram, browser_histogram
 
 '''
 GUI for the program 
@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot):
 
             frame = F(container, self)
 
@@ -40,8 +40,10 @@ class DataVisualise(tk.Tk):
         self.show_frame(HomePage)
 
         window_width = 700
-        window_height = 800
-        self.geometry(f"{window_width}x{window_height}+600+100")
+        window_height = 500
+        window_x = (self.winfo_screenwidth() - window_width) // 2
+        window_y = (self.winfo_screenheight() - window_height) // 2
+        self.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
 
     def show_frame(self, cont):
 
@@ -53,7 +55,7 @@ class HomePage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        label = tk.Label(self, text="What would you like to visualise?", font=LARGE_FONT)
+        label = tk.Label(self, text="What would you like to visualize?", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
         button = tk.Button(self, text="Countries Histogram",
@@ -63,6 +65,15 @@ class HomePage(tk.Frame):
         button2 = tk.Button(self, text="Continent Histogram",
                             command=lambda: controller.show_frame(ContinentPlot))
         button2.pack(pady=10)
+
+        button4 = tk.Button(self, text="Browser Histogram",
+                            command=lambda: controller.show_frame(BrowserPlot))
+        button4.pack(pady=10)
+
+        button3 = tk.Button(self, text="Formatted Browser Histogram",
+                            command=lambda: controller.show_frame(FormatBrowserPlot))
+        button3.pack(pady=10)
+
 
 
 class CountryPlot(tk.Frame):
@@ -81,11 +92,11 @@ class CountryPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
 
-        fig, ax = plt.subplots()
-        ax.clear()
-        # Add a canvas to display the plot
-        self.canvas = FigureCanvasTkAgg(fig, master=self)
-        self.canvas.get_tk_widget().pack(pady=10)
+        # fig, ax = plt.subplots()
+        # ax.clear()
+        # # Add a canvas to display the plot
+        # self.canvas = FigureCanvasTkAgg(fig, master=self)
+        # self.canvas.get_tk_widget().pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
@@ -95,26 +106,25 @@ class CountryPlot(tk.Frame):
         # Show the home page
         controller.show_frame(HomePage)
 
-        # Create a new empty plot on the current axis
-        fig, ax = plt.subplots()
-        ax.clear()
-
         # Clear the text box
         self.doc_uuid_entry.delete(0, tk.END)
-
+        
+        # Create a new empty plot on the current axis
+        # fig, ax = plt.subplots()
+        # ax.clear()
         # Update the canvas with the new empty plot
-        self.canvas.figure = fig
-        self.canvas.draw()
+        # self.canvas.figure = fig
+        # self.canvas.draw()
     
     def plot_country_histogram(self, doc_uuid):
         # Get documents, visitors, and json_data from the file
         documents, visitors, json_data = read_file(file_path)
 
         # Plot the country histogram for the specified document UUID
-        fig, ax = countries_histogram(json_data, doc_uuid)
+        countries_histogram(json_data, doc_uuid)
 
-        self.canvas.figure = fig
-        self.canvas.draw()
+        # self.canvas.figure = fig
+        # self.canvas.draw()
 
 
 class ContinentPlot(tk.Frame):
@@ -124,24 +134,76 @@ class ContinentPlot(tk.Frame):
         label = tk.Label(self, text="The number of viewers from each continent for the document:", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
+        doc_uuid_label = tk.Label(self, text="Document UUID:")
+        doc_uuid_label.pack(pady=5)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_continent_histogram(self.doc_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10)
+
+    def plot_continent_histogram(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        _, countries = views_country(json_data, doc_uuid)
+        continents_histogram(countries)
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.doc_uuid_entry.delete(0, tk.END)
+
+class BrowserPlot(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="The browsers used to access the documents:", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_browser())
+        buttonplot.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: controller.show_frame(HomePage))
         button1.pack(pady=10)
 
-        # button2 = tk.Button(self, text="Page One",
-        #                     command=lambda: controller.show_frame(CountryPlot))
-        # button2.pack()
+    def plot_browser(self):
+        documents, visitors, json_data = read_file(file_path)
+
+        browser_count = view_broswer(json_data)
+        
+        browser_histogram(browser_count)
+
+
+class FormatBrowserPlot(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="The various browsers used to access the documents:", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_format_browser())
+        buttonplot.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+    def plot_format_browser(self):
+        documents, visitors, json_data = read_file(file_path)
+
+        browser_count = view_broswer(json_data)
+        
+        format_browser_histogram(browser_count)
+
         
 def startGUI():
     app = DataVisualise()
     global file_path
     file_path = 'Dataset/sample_small.json'
 
-    # window_width = 700
-    # window_height = 500
-    # window_x = (app.winfo_screenwidth() - window_width) // 2  # Center horizontally
-    # window_y = (app.winfo_screenheight() - window_height) // 2  # Center vertically
-    # app.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
-
     app.mainloop()
-
