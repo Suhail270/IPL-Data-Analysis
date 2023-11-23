@@ -2,7 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
-from .graphs import countries_histogram, continents_histogram, format_browser_histogram
+from .graphs import countries_histogram, continents_histogram, format_browser_histogram, browser_histogram
 
 '''
 GUI for the program 
@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, FormatBrowserPlot):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot):
 
             frame = F(container, self)
 
@@ -66,9 +66,14 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(ContinentPlot))
         button2.pack(pady=10)
 
-        button2 = tk.Button(self, text="Formatted Browser Histogram",
+        button4 = tk.Button(self, text="Browser Histogram",
+                            command=lambda: controller.show_frame(BrowserPlot))
+        button4.pack(pady=10)
+
+        button3 = tk.Button(self, text="Formatted Browser Histogram",
                             command=lambda: controller.show_frame(FormatBrowserPlot))
-        button2.pack(pady=10)
+        button3.pack(pady=10)
+
 
 
 class CountryPlot(tk.Frame):
@@ -152,6 +157,28 @@ class ContinentPlot(tk.Frame):
         # Clear the text box
         self.doc_uuid_entry.delete(0, tk.END)
 
+class BrowserPlot(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="The browsers used to access the documents:", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_browser())
+        buttonplot.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+    def plot_browser(self):
+        documents, visitors, json_data = read_file(file_path)
+
+        browser_count = view_broswer(json_data)
+        
+        browser_histogram(browser_count)
+
+
 class FormatBrowserPlot(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -163,7 +190,7 @@ class FormatBrowserPlot(tk.Frame):
         buttonplot.pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: self.back_to_home(controller))
+                            command=lambda: controller.show_frame(HomePage))
         button1.pack(pady=10)
 
     def plot_format_browser(self):
@@ -173,12 +200,6 @@ class FormatBrowserPlot(tk.Frame):
         
         format_browser_histogram(browser_count)
 
-
-    def back_to_home(self, controller):
-        # Show the home page
-        controller.show_frame(HomePage)
-        # Clear the text box
-        self.doc_uuid_entry.delete(0, tk.END)
         
 def startGUI():
     app = DataVisualise()

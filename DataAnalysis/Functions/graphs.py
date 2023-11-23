@@ -68,12 +68,15 @@ def browser_histogram(browser_count):
     plt.bar(browser, count, color='#F8C8DC')
 
     plt.xlabel('Browser')
+    plt.xticks(rotation=90)
     plt.ylabel('Number of Occurrences')
     plt.title('Browser Histogram')
     # plt.tight_layout()
 
     # Show the plot
-    plt.show()
+    hist_browser = plt.show()
+
+    return hist_browser
 
 '''
 Plots a histogram for the number of views from different browsers (formatted)
@@ -91,6 +94,7 @@ def format_browser_histogram(browser_count):
     plt.bar(formated_browser, count, color='#F8C8DC')
 
     plt.xlabel('Formatted Browser')
+    plt.xticks(rotation=90)
     plt.ylabel('Number of Occurrences')
     plt.title('Formatted Browser Histogram')
     # plt.tight_layout()
