@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 from Functions.cw_requirements import (doc_to_visitor, 
                               also_likes, 
@@ -11,9 +12,10 @@ from Functions.cw_requirements import (doc_to_visitor,
                               avid_readers)
 
 from Functions.additional import (max_unique_visitors, 
-                         test_also_likes, 
+                         also_likes_testing, 
                          sortingfunc_test, 
-                         find_doc)
+                         find_doc,
+                         validation)
 
 from Functions.graphs import (countries_histogram, 
                      continents_histogram, 
@@ -23,7 +25,7 @@ from Functions.graphs import (countries_histogram,
 from Functions.gui import startGUI
 
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
-# Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 5d -f Dataset/sample_small.json
+# Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 5d -f Dataset/sample_small.json# Example usage - python3.11 main.py -u aaa4eaf77abab0b2 -d 120831070849-697c56ab376445eaadd13dbb8b6d34d0 -t 2a -f Dataset/sample_small.json
 
 '''
 Defines the syntax for passing command line arguments. Failure to adhering to this syntax will raise an exception.
@@ -31,11 +33,25 @@ Defines the syntax for passing command line arguments. Failure to adhering to th
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Execute different functions based on task id.')
-    parser.add_argument('-u', '--user_uuid', required=True, help='User UUID')
-    parser.add_argument('-d', '--doc_uuid', required=True, help='Document UUID')
-    parser.add_argument('-t', '--task_id', required=True, help='Task ID')
-    parser.add_argument('-f', '--file_name', required=True, help='File name')
-    return parser.parse_args()
+    parser.add_argument('-u', '--user_uuid', help='User UUID')
+    parser.add_argument('-d', '--doc_uuid', help='Document UUID')
+    parser.add_argument('-t', '--task_id', help='Task ID')
+    parser.add_argument('-f', '--file_name', help='File name')
+
+    args = parser.parse_args()
+
+     # Check if either all or none of the arguments are provided
+    all_arguments_present = all(vars(args).values())
+    none_of_the_arguments_present = not any(vars(args).values())
+
+    if not (all_arguments_present or none_of_the_arguments_present):
+        parser.error('''\n\nIf you would like to start the GUI, enter no arguments. Your terminal command should be:
+python main.py.
+      
+If you would like to execute a function, please enter all arguments. Your terminal command should be:
+python main.py -u <user_uuid> -d <doc_uuid> -t <task_id> -f <file_name>.\n\n''')
+
+    return args
 
 '''
 Executes function based on the task id passed.
@@ -47,6 +63,11 @@ def execute_task(args):
     visitor_uuid = args.user_uuid
     
     documents, visitors, json_data = read_file(file_path)
+
+    valid = validation(doc_uuid=doc_uuid, documents=documents, visitor_uuid=visitor_uuid, visitors=visitors)
+
+    if valid == False:
+        sys.exit(1)
 
     if args.task_id == "2a":
         countries_histogram(json_data, doc_uuid)
@@ -126,16 +147,16 @@ Enter Option (1 or 2): ''')
 
 if __name__ == "__main__":
     
-    # If no command line arguments are passed, the GUI is invoked.
-    
-    nullParser = argparse.ArgumentParser()
-
     try:
-        nullParser.parse_args()
-        print("Starting GUI...")
-        startGUI()
-        print("@@@@@@@@@@@@@@")
-    
-    except:
+        # If no command line arguments are passed, the GUI is invoked.
         args = parse_arguments()
-        execute_task(args)
+
+        if not any(vars(args).values()):
+            print("Starting GUI...")
+            startGUI()
+        else:
+            execute_task(args)
+    
+    except Exception as e:
+        print(e)
+        sys.exit(1)
