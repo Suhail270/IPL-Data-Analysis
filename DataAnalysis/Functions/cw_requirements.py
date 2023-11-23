@@ -8,9 +8,6 @@ from .additional import sortingfunc_test
 This function reads the JSON file specified by the file_path and returns the documents, visitors, and the entire JSON data.
 The data structures returned by this are invoked and used throughout rest of the parts.
 '''
-
-# file_path = '../Dataset/sample_small.json'
-
 def read_file(file_path):
     # Initialize dictionaries to store documents and visitors
     documents = {}
@@ -57,7 +54,7 @@ def read_file(file_path):
 
     except FileNotFoundError:
         # Handle the case where the specified file path is not found
-        print("File does not exist at specified location.")
+        raise Exception("File does not exist at specified location.")
 
 '''
 Counts the occurrences of each country based on the specified document UUID.
@@ -72,7 +69,6 @@ def views_country(json_data, doc_uuid):
     #Counts the occurence of each country
     country_count = Counter(countries)
     return country_count, countries
-
 
 
 '''
@@ -100,7 +96,6 @@ def view_broswer(json_data):
     # global browser_count
     browser_count = Counter(browser)
     return browser_count
-
 
 '''
 Formats browser strings to display main browser name and counts occurrences.
