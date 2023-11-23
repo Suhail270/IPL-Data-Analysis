@@ -1,3 +1,5 @@
+from datetime import datetime
+
 '''
 Additional Feature: Goes through all the documents and returns the document UUID with the highest number of unique 
 visitors and the corresponding count.
@@ -78,3 +80,66 @@ def validation(doc_uuid=None, visitor_uuid=None, documents=None, visitors=None):
         raise Exception("Invalid {x} UUID. Please try again.".format(x=valid))
     else:       
         return valid
+
+'''
+Additional Feature: Returns the most common time of the day when a specified document is read. If no document ID is specified,
+the function returns the most common time of the day when all documents are read.
+'''
+
+def most_popular_time_documents(documents, doc_uuid=None):
+    # Dictionary to store the number of views for each hour
+    timestamp_count = {}
+
+    if documents is not None:
+
+        if doc_uuid is not None:
+        # Iterate through each event for the specified document UUID
+            for event in documents[doc_uuid]:
+                # Get the timestamp for the current event
+                timestamp = datetime.fromtimestamp(int(event.get("ts")))
+
+                if timestamp not in timestamp_count:
+                    # Initialize the count for the timestamp
+                    timestamp_count[timestamp] = 1
+                else:
+                    # Increment the count for the timestamp
+                    timestamp_count[timestamp] += 1
+        
+        else:
+            # Iterate through each document UUID in the documents dictionary
+            for doc_uuid in documents:
+                # Iterate through each event for the current document UUID
+                for event in documents[doc_uuid]:
+                    # Get the timestamp for the current event
+                    timestamp = datetime.fromtimestamp(int(event.get("ts")))
+
+                    if timestamp not in timestamp_count:
+                        # Initialize the count for the timestamp
+                        timestamp_count[timestamp] = 1
+                    else:
+                        # Increment the count for the timestamp
+                        timestamp_count[timestamp] += 1
+    
+    return timestamp_count
+
+'''
+Additional Feature: Returns the most common time of the day when a specified visitor reads the documents.
+'''
+
+def most_popular_time_visitors(visited_documents, all_documents):
+    # Dictionary to store the number of views for each hour
+    timestamp_count = {}                     
+    for document in visited_documents:
+        # Iterate through each event for the current document UUID
+        for event in all_documents[document]:
+            # Get the timestamp for the current event
+            timestamp = datetime.fromtimestamp(int(event.get("ts")))
+
+            if timestamp not in timestamp_count:
+                # Initialize the count for the timestamp
+                timestamp_count[timestamp] = 1
+            else:
+                # Increment the count for the timestamp
+                timestamp_count[timestamp] += 1
+    
+    return timestamp_count

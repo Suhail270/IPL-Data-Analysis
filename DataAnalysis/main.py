@@ -15,7 +15,9 @@ from Functions.additional import (max_unique_visitors,
                          also_likes_testing, 
                          sortingfunc_test, 
                          find_doc,
-                         validation)
+                         validation,
+                         most_popular_time_documents,
+                         most_popular_time_visitors)
 
 from Functions.graphs import (countries_histogram, 
                      continents_histogram, 
@@ -25,7 +27,7 @@ from Functions.graphs import (countries_histogram,
 from Functions.gui import startGUI
 
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
-# Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 5d -f Dataset/sample_small.json# Example usage - python3.11 main.py -u aaa4eaf77abab0b2 -d 120831070849-697c56ab376445eaadd13dbb8b6d34d0 -t 2a -f Dataset/sample_small.json
+# Example usage - python main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 6a -f Dataset/sample_small.json
 
 '''
 Defines the syntax for passing command line arguments. Failure to adhering to this syntax will raise an exception.
@@ -144,6 +146,26 @@ Enter Option (1 or 2): ''')
             print("{document} - Read by {num} other readers".format(document=i, num=also_like_func[i]))
             
         print("\nSorting Function: {sort}".format(sort=sorting_text))
+    
+    elif args.task_id == "6a":
+        result = most_popular_time_documents(documents)
+        print("Most Popular Times:\n")
+        for i in list(result.keys()):
+            print("{time}: {num} views".format(time=i, num=result[i]))
+
+    elif args.task_id == "6b":
+        result = most_popular_time_documents(documents, doc_uuid)
+        print("Most Popular Times for document {doc_uuid}:\n".format(doc_uuid=doc_uuid))
+        for i in list(result.keys()):
+            print("{time}: {num} views".format(time=i, num=result[i]))
+
+    elif args.task_id == "6c":
+        documents_visited = visitor_to_doc(documents, visitor_uuid)
+        result = most_popular_time_visitors(documents_visited, documents)
+        print(result)
+        print("Most Popular Times for visitor {visitor_uuid}:\n".format(visitor_uuid=visitor_uuid))
+        for i in list(result.keys()):
+            print("{time}: {num} views".format(time=i, num=result[i]))
 
 if __name__ == "__main__":
     
