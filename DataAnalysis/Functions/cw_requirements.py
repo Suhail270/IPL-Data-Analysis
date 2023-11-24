@@ -26,9 +26,9 @@ def read_file(file_path):
                 json_data.append(json.loads(line))
 
                 # Check if the JSON data contains "env_doc_id"
-                if "env_doc_id" in json_data[len(json_data)-1]:
+                if "subject_doc_id" in json_data[len(json_data)-1]:
                     # Extract the document UUID and content from the JSON data
-                    doc_uuid = json_data[len(json_data)-1]["env_doc_id"]
+                    doc_uuid = json_data[len(json_data)-1]["subject_doc_id"]
                     content = json_data[len(json_data)-1]
 
                     # Check if the document UUID is already in the documents dictionary

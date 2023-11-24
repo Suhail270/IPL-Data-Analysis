@@ -17,7 +17,8 @@ from Functions.additional import (max_unique_visitors,
                          find_doc,
                          validation,
                          most_popular_time_documents,
-                         most_popular_time_visitors)
+                         most_popular_time_visitors,
+                         ip_to_location)
 
 from Functions.graphs import (countries_histogram, 
                      continents_histogram, 
@@ -65,7 +66,11 @@ def execute_task(args):
     visitor_uuid = args.user_uuid
     
     documents, visitors, json_data = read_file(file_path)
-
+    sum = 0
+    for i in documents:
+        sum+=len(documents[i])
+        print(i, len(documents[i]))
+    print(sum)
     valid = validation(doc_uuid=doc_uuid, documents=documents, visitor_uuid=visitor_uuid, visitors=visitors)
 
     if valid == False:
@@ -170,6 +175,18 @@ Enter Option (1 or 2): ''')
         print("Most Popular Times for visitor {visitor_uuid}:\n".format(visitor_uuid=visitor_uuid))
         for i in list(result.keys()):
             print("{time}: {num} views".format(time=i, num=result[i]))
+    
+    elif args.task_id == "6d":
+        a = input("Enter IP Address: ")
+        print()
+        result = ip_to_location(documents, a)
+        for i in result:
+            print(i, result[i])
+
+    elif args.task_id == "6e":
+        result = ip_to_location(documents)
+        for i in result:
+            print(i, result[i])
 
 if __name__ == "__main__":
     

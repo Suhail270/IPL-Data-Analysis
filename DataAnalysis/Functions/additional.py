@@ -143,3 +143,40 @@ def most_popular_time_visitors(visited_documents, all_documents):
                 timestamp_count[timestamp] += 1
     
     return timestamp_count
+
+    
+
+# check ip address, fetch all the time stamps for that particular ip address, 
+# if it is in the range of 9am to 5pm, then count it as school/office. else, home
+
+def ip_to_location(documents, ip_address=None):
+    # Dictionary to store count of home and office/school views
+    views = {"Home": 0, "Office/School": 0}
+    print(len(documents))
+    l = []
+    
+    # Iterate through each document UUID in the documents dictionary
+    for doc_uuid in documents:
+        # Iterate through each event for the current document UUID
+        for event in documents[doc_uuid]:
+
+            if ip_address is not None:
+                
+                # Check if the event contains "ip" matching the specified IP address
+                # and if the location is not already in the list
+                if "visitor_ip" in event and event["visitor_ip"] == ip_address:
+                    time = datetime.fromtimestamp(int(event.get("ts")))
+                    # pseduo_label_counter(views, time)
+
+            else:
+                time = datetime.fromtimestamp(int(event.get("ts")))
+                if time.hour not in l:
+                    l.append(time.hour)
+                if time.hour >= 9 and time.hour <= 17:
+                    views["Office/School"] += 1
+                else:
+                    views["Home"] += 1
+                
+    print(l)
+    
+    return views
