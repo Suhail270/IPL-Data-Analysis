@@ -18,7 +18,10 @@ from Functions.additional import (max_unique_visitors,
                          validation,
                          most_popular_time_documents,
                          most_popular_time_visitors,
-                         ip_to_location)
+                         ip_to_location,
+                         logged_in_visitors,
+                         non_logged_in_visitors,
+                         visitor_authenticated)
 
 from Functions.graphs import (countries_histogram, 
                      continents_histogram, 
@@ -28,7 +31,7 @@ from Functions.graphs import (countries_histogram,
 from Functions.gui import startGUI
 
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
-# Example usage - python3.11 main.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 6a -f Dataset/sample_small.json
+# Example usage - python cw2.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 6f -f Dataset/sample_small.json
 
 '''
 Defines the syntax for passing command line arguments. Failure to adhering to this syntax will raise an exception.
@@ -66,11 +69,6 @@ def execute_task(args):
     visitor_uuid = args.user_uuid
     
     documents, visitors, json_data = read_file(file_path)
-    sum = 0
-    for i in documents:
-        sum+=len(documents[i])
-        print(i, len(documents[i]))
-    print(sum)
     valid = validation(doc_uuid=doc_uuid, documents=documents, visitor_uuid=visitor_uuid, visitors=visitors)
 
     if valid == False:
@@ -187,6 +185,40 @@ Enter Option (1 or 2): ''')
         result = ip_to_location(documents)
         for i in result:
             print(i, result[i])
+
+    elif args.task_id == "6f":
+
+        logged_in_users = logged_in_visitors(visitors)
+        non_logged_in_users = non_logged_in_visitors(visitors)
+
+        print("\nTotal Number of Visitors: {count}\n".format(count = len(visitors)))
+
+        print("\nNumber of Logged In Users: {count}\n".format(count = sum(list(logged_in_users.values()))))
+
+        print("Source\t\tCount")
+
+        for i in logged_in_users:
+            print(i.capitalize() + "\t" + str(logged_in_users[i]))
+
+        print("\nNumber of Non-Logged In Users: {count}\n".format(count = sum(list(non_logged_in_users.values()))))
+
+        print("Source\t\tCount")
+
+        for i in non_logged_in_users:
+            print(i.capitalize() + "\t" + str(non_logged_in_users[i]))
+
+    elif args.task_id == "6g":
+        
+        result = visitor_authenticated(visitor_uuid, visitors)
+
+        print("\nVisitor UUID: {uuid}\n".format(uuid=visitor_uuid))
+
+        if result is not False:
+            print("The visitor is logged in.\nUsername: " + result + "\n")
+        
+        else:
+            print("The visitor is not logged in.\n")
+
 
 if __name__ == "__main__":
     
