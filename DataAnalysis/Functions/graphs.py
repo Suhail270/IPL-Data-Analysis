@@ -56,6 +56,31 @@ def countries_bar(json_data, doc_uuid):
 
     return bar_country
 
+'''
+Plots a pie chart for the number of views from each country
+'''
+
+def countries_pie(json_data, doc_uuid):
+
+     # Gets the occurence of each country using views_country. 
+    # Ignores the second value returned
+    country_count, _ = views_country(json_data, doc_uuid)
+
+    # Extract the country and its counts 
+    country, count = zip(*country_count.items())
+
+    # Plot the pie chart
+    plt.pie(count, labels=country, autopct='%1.1f%%', startangle=90,textprops={'rotation': 45})
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.title('Country Pie Chart', x=0.05)
+
+    # Show the plot
+    pie_country = plt.show()
+
+
+    return pie_country
+
 
 
 '''
@@ -108,6 +133,29 @@ def coontinents_bar(countries):
 
 
     return bar_continent
+
+'''
+Plots a pie chart for the number of views from each continent
+'''
+
+def continent_pie(countries):
+    # Gets the occurence of each continent using group_country. 
+    continent_count = group_country(countries)
+
+    # Extract the continents and their counts 
+    continent, count = zip(*continent_count.items())
+
+    # Plot the pie chart
+    plt.pie(count, labels=continent, autopct='%1.1f%%', startangle=90,textprops={'rotation': 45})
+    # colors=['#ff99c8', '#d0f4de', '#a9def9', '#e4c1f9']
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.title('Continent Pie Chart', x=0.05)
+
+    # Show the plot
+    continent_pie = plt.show()
+
+    return continent_pie
 
 '''
 Plots a histogram for the number of views from different browsers
@@ -208,3 +256,27 @@ def format_browser_bar(browser_count):
     barFormatBrowser = plt.show()
 
     return barFormatBrowser
+
+'''
+Plots a pie chart for the number of views from different browsers (formatted)
+'''
+
+def format_browser_pie(browser_count):
+
+    # Gets the occurence of each browser using view_browser.
+    format_browser_count = format_browser(browser_count)
+
+    # Extract the browsers and their counts 
+    formated_browser, count = zip(*format_browser_count.items())
+
+    # Plot the pie chart
+    plt.pie(count, labels=formated_browser, autopct='%1.1f%%', startangle=90,textprops={'rotation': 45})
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.title('Country Pie Chart', x=0.05)
+
+    # Show the plot
+    barFormatBrowser = plt.show()
+
+    return barFormatBrowser
+

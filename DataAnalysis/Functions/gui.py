@@ -2,7 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
-from .graphs import countries_histogram, continents_histogram, format_browser_histogram, browser_histogram, countries_bar, coontinents_bar, browser_bar, format_browser_bar
+from .graphs import *
 
 '''
 GUI for the program 
@@ -58,19 +58,19 @@ class HomePage(tk.Frame):
         label = tk.Label(self, text="What would you like to visualize?", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
-        button = tk.Button(self, text="Countries Histogram",
+        button = tk.Button(self, text="Countries Plots",
                             command=lambda: controller.show_frame(CountryPlot))
         button.pack(pady=10)
 
-        button2 = tk.Button(self, text="Continent Histogram",
+        button2 = tk.Button(self, text="Continent Plots",
                             command=lambda: controller.show_frame(ContinentPlot))
         button2.pack(pady=10)
 
-        button4 = tk.Button(self, text="Browser Histogram",
+        button4 = tk.Button(self, text="Browser Plots",
                             command=lambda: controller.show_frame(BrowserPlot))
         button4.pack(pady=10)
 
-        button3 = tk.Button(self, text="Formatted Browser Histogram",
+        button3 = tk.Button(self, text="Formatted Browser Plots",
                             command=lambda: controller.show_frame(FormatBrowserPlot))
         button3.pack(pady=10)
 
@@ -94,6 +94,9 @@ class CountryPlot(tk.Frame):
 
         buttonbar = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_country_bar(self.doc_uuid_entry.get()))
         buttonbar.pack(pady=10)
+
+        buttonpie = tk.Button(self, text="Plot Pie Chart", command=lambda: self.plot_country_pie(self.doc_uuid_entry.get()))
+        buttonpie.pack(pady=10)
 
         # fig, ax = plt.subplots()
         # ax.clear()
@@ -130,6 +133,10 @@ class CountryPlot(tk.Frame):
         documents, visitors, json_data = read_file(file_path)
         countries_bar(json_data, doc_uuid)
 
+    def plot_country_pie(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        countries_pie(json_data, doc_uuid)
+
         # self.canvas.figure = fig
         # self.canvas.draw()
 
@@ -152,6 +159,9 @@ class ContinentPlot(tk.Frame):
         buttonbar = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_continent_bar(self.doc_uuid_entry.get()))
         buttonbar.pack(pady=10)
 
+        buttonpie = tk.Button(self, text="Plot Pie Chart", command=lambda: self.plot_continent_pie(self.doc_uuid_entry.get()))
+        buttonpie.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
@@ -165,6 +175,11 @@ class ContinentPlot(tk.Frame):
         documents, visitors, json_data = read_file(file_path)
         _, countries = views_country(json_data, doc_uuid)
         coontinents_bar(countries)
+
+    def plot_continent_pie(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        _, countries = views_country(json_data, doc_uuid)
+        continent_pie(countries)
 
     def back_to_home(self, controller):
         # Show the home page
@@ -219,24 +234,28 @@ class FormatBrowserPlot(tk.Frame):
         buttonbar = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_format_browser_bar())
         buttonbar.pack(pady=10)
 
+        buttonpie = tk.Button(self, text="Plot Pie Chart", command=lambda: self.plot_format_browser_pie())
+        buttonpie.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: controller.show_frame(HomePage))
         button1.pack(pady=10)
 
     def plot_format_browser(self):
         documents, visitors, json_data = read_file(file_path)
-
         browser_count = view_broswer(json_data)
-        
         format_browser_histogram(browser_count)
 
 
     def plot_format_browser_bar(self):
         documents, visitors, json_data = read_file(file_path)
-
         browser_count = view_broswer(json_data)
-        
         format_browser_bar(browser_count)
+
+    def plot_format_browser_pie(self):
+        documents, visitors, json_data = read_file(file_path)
+        browser_count = view_broswer(json_data)
+        format_browser_pie(browser_count)
 
         
 def startGUI():
