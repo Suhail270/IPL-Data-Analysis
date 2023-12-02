@@ -15,7 +15,6 @@ def countries_histogram(json_data, doc_uuid):
     country, count = zip(*country_count.items())
     # print(country, count)
 
-    fig, ax = plt.subplots()
     # Plot the graph
     plt.hist(country,bins = len(country), color='#C3B1E1', weights=count)
 
@@ -26,8 +25,37 @@ def countries_histogram(json_data, doc_uuid):
 
     hist_country = plt.show()
 
-    # Return the figure and axis.
+    # Return the country histogram
     return hist_country
+
+
+'''
+Plots a bar graph for the number of views from each country
+'''
+
+def countries_bar(json_data, doc_uuid):
+
+     # Gets the occurence of each country using views_country. 
+    # Ignores the second value returned
+    country_count, _ = views_country(json_data, doc_uuid)
+
+    # Extract the country and its counts 
+    country, count = zip(*country_count.items())
+
+    # Plot the graph
+    plt.bar(country, count, color='#C3B1E1')
+
+    plt.xlabel('Country')
+    plt.ylabel('Number of Occurrences')
+    plt.title('Country Bar Graph')
+    plt.tight_layout()
+
+    # Show the plot
+    bar_country = plt.show()
+
+
+    return bar_country
+
 
 
 '''
@@ -43,7 +71,7 @@ def continents_histogram(countries):
     continent, count = zip(*continent_count.items())
 
     # Plot the graph
-    plt.bar(continent, count, color='#FAA0A0')
+    plt.hist(continent,bins = len(continent), color='#FAA0A0', weights=count)
 
     plt.xlabel('Continent')
     plt.ylabel('Number of Occurrences')
@@ -56,10 +84,59 @@ def continents_histogram(countries):
     return hist_continent
 
 '''
+Plots a bar graph for the number of views from each continent
+'''
+
+def coontinents_bar(countries):
+
+   # Gets the occurence of each continent using group_country. 
+    continent_count = group_country(countries)
+
+    # Extract the continents and their counts 
+    continent, count = zip(*continent_count.items())
+
+    # Plot the graph
+    plt.bar(continent, count, color='#FAA0A0')
+
+    plt.xlabel('Continent')
+    plt.ylabel('Number of Occurrences')
+    plt.title('Continent Bar Graph')
+    plt.tight_layout()
+
+    # Show the plot
+    bar_continent = plt.show()
+
+
+    return bar_continent
+
+'''
 Plots a histogram for the number of views from different browsers
 '''
 
 def browser_histogram(browser_count):
+
+    # Extract the browsers and their counts 
+    browser, count = zip(*browser_count.items())
+
+    # Plot the graph
+    plt.hist(browser,bins = len(browser), color='#F8C8DC', weights=count)
+
+    plt.xlabel('Browser')
+    plt.xticks(rotation=90)
+    plt.ylabel('Number of Occurrences')
+    plt.title('Browser Histogram')
+    # plt.tight_layout()
+
+    # Show the plot
+    hist_browser = plt.show()
+
+    return hist_browser
+
+'''
+Plots a bar graph for the number of views from different browsers
+'''
+
+def browser_bar(browser_count):
 
     # Extract the browsers and their counts 
     browser, count = zip(*browser_count.items())
@@ -74,15 +151,42 @@ def browser_histogram(browser_count):
     # plt.tight_layout()
 
     # Show the plot
-    hist_browser = plt.show()
+    bar_browser = plt.show()
 
-    return hist_browser
+    return bar_browser
 
 '''
 Plots a histogram for the number of views from different browsers (formatted)
 '''
 
 def format_browser_histogram(browser_count):
+
+    # Gets the occurence of each browser using view_browser.
+    format_browser_count = format_browser(browser_count)
+
+    # Extract the browsers and their counts 
+    formated_browser, count = zip(*format_browser_count.items())
+
+    # Plot the graph
+    plt.hist(formated_browser, bins=len(formated_browser), color='#F8C8DC', weights=count)
+
+    plt.xlabel('Formatted Browser')
+    plt.xticks(rotation=90)
+    plt.ylabel('Number of Occurrences')
+    plt.subplots_adjust(bottom=0.483)
+    plt.title('Formatted Browser Histogram')
+    # plt.tight_layout()
+
+    # Show the plot
+    histFormatBrowser = plt.show()
+
+    return histFormatBrowser
+
+'''
+Plots a bar graph for the number of views from different browsers (formatted)
+'''
+
+def format_browser_bar(browser_count):
 
     # Gets the occurence of each browser using view_browser.
     format_browser_count = format_browser(browser_count)
@@ -101,6 +205,6 @@ def format_browser_histogram(browser_count):
     # plt.tight_layout()
 
     # Show the plot
-    histFormatBrowser = plt.show()
+    barFormatBrowser = plt.show()
 
-    return histFormatBrowser
+    return barFormatBrowser

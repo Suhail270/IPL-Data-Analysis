@@ -2,7 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
-from .graphs import countries_histogram, continents_histogram, format_browser_histogram, browser_histogram
+from .graphs import countries_histogram, continents_histogram, format_browser_histogram, browser_histogram, countries_bar, coontinents_bar, browser_bar, format_browser_bar
 
 '''
 GUI for the program 
@@ -92,6 +92,9 @@ class CountryPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_country_histogram(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
 
+        buttonbar = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_country_bar(self.doc_uuid_entry.get()))
+        buttonbar.pack(pady=10)
+
         # fig, ax = plt.subplots()
         # ax.clear()
         # # Add a canvas to display the plot
@@ -123,6 +126,10 @@ class CountryPlot(tk.Frame):
         # Plot the country histogram for the specified document UUID
         countries_histogram(json_data, doc_uuid)
 
+    def plot_country_bar(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        countries_bar(json_data, doc_uuid)
+
         # self.canvas.figure = fig
         # self.canvas.draw()
 
@@ -142,6 +149,9 @@ class ContinentPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_continent_histogram(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
 
+        buttonbar = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_continent_bar(self.doc_uuid_entry.get()))
+        buttonbar.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
@@ -150,6 +160,11 @@ class ContinentPlot(tk.Frame):
         documents, visitors, json_data = read_file(file_path)
         _, countries = views_country(json_data, doc_uuid)
         continents_histogram(countries)
+
+    def plot_continent_bar(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        _, countries = views_country(json_data, doc_uuid)
+        coontinents_bar(countries)
 
     def back_to_home(self, controller):
         # Show the home page
@@ -167,6 +182,9 @@ class BrowserPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_browser())
         buttonplot.pack(pady=10)
 
+        buttonbar = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_browser_bar())
+        buttonbar.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: controller.show_frame(HomePage))
         button1.pack(pady=10)
@@ -177,6 +195,15 @@ class BrowserPlot(tk.Frame):
         browser_count = view_broswer(json_data)
         
         browser_histogram(browser_count)
+
+    def plot_browser_bar(self):
+        documents, visitors, json_data = read_file(file_path)
+
+        browser_count = view_broswer(json_data)
+        
+        browser_bar(browser_count)
+
+
 
 
 class FormatBrowserPlot(tk.Frame):
@@ -189,6 +216,9 @@ class FormatBrowserPlot(tk.Frame):
         buttonplot = tk.Button(self, text="Plot Histogram", command=lambda: self.plot_format_browser())
         buttonplot.pack(pady=10)
 
+        buttonbar = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_format_browser_bar())
+        buttonbar.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: controller.show_frame(HomePage))
         button1.pack(pady=10)
@@ -199,6 +229,14 @@ class FormatBrowserPlot(tk.Frame):
         browser_count = view_broswer(json_data)
         
         format_browser_histogram(browser_count)
+
+
+    def plot_format_browser_bar(self):
+        documents, visitors, json_data = read_file(file_path)
+
+        browser_count = view_broswer(json_data)
+        
+        format_browser_bar(browser_count)
 
         
 def startGUI():
