@@ -143,3 +143,93 @@ def most_popular_time_visitors(visited_documents, all_documents):
                 timestamp_count[timestamp] += 1
     
     return timestamp_count
+
+    
+'''
+Additional Feature: Pseudo-labels users as school/office or home based on the time stamp.
+'''
+
+# Function to determine the location (home or office/school) of a given IP address in the context of visitor events
+def ip_to_location(documents, ip_address=None):
+    # Dictionary to store count of home and office/school views
+    views = {"Home": 0, "Office/School": 0}
+    
+    # List to store unique hours (for non-specified IP addresses)
+    l = []
+
+    # Iterate through each document UUID in the documents dictionary
+    for doc_uuid in documents:
+        # Iterate through each event for the current document UUID
+        for event in documents[doc_uuid]:
+            
+            # If a specific IP address is provided, check for its presence in the event
+            if ip_address is not None:
+                if "visitor_ip" in event and event["visitor_ip"] == ip_address:
+                    time = datetime.fromtimestamp(int(event.get("ts")))
+            
+            # If no specific IP address is provided, consider all events and track hours for non-specified IP addresses
+            else:
+                time = datetime.fromtimestamp(int(event.get("ts")))
+                if time.hour not in l:
+                    l.append(time.hour)
+                # Check if the event timestamp falls within office/school hours (9am to 5pm)
+                if time.hour >= 9 and time.hour <= 17:
+                    views["Office/School"] += 1
+                else:
+                    views["Home"] += 1
+    
+    return views
+
+'''
+Additional Feature: Counts logged-in visitors based on their username and source
+'''
+
+def logged_in_visitors(visitors):
+    logged_in_visitors = {}
+
+    for visitor in visitors:
+        for entries in visitors[visitor]:
+            # Check for the presence of both "visitor_username" and "visitor_source" in the event
+            if "visitor_username" in list(entries.keys()) and "visitor_source" in list(entries.keys()):
+                # Update the count of logged-in visitors for each source
+                if entries["visitor_source"] in list(logged_in_visitors.keys()):
+                    logged_in_visitors[entries["visitor_source"]] += 1
+                else:
+                    logged_in_visitors[entries["visitor_source"]] = 1
+    
+    return logged_in_visitors
+
+'''
+Additional Feature: Counts non logged-in visitors based on their source
+'''
+
+def non_logged_in_visitors(visitors):
+    non_logged_in_visitors = {}
+    
+    for visitor in visitors:
+        for entries in visitors[visitor]:
+            # Check for the absence of "visitor_username" and the presence of "visitor_source" in the event
+            if "visitor_username" not in list(entries.keys()) and "visitor_source" in list(entries.keys()):
+                # Update the count of non-logged-in visitors for each source
+                if entries["visitor_source"] in list(non_logged_in_visitors.keys()):
+                    non_logged_in_visitors[entries["visitor_source"]] += 1
+                else:
+                    non_logged_in_visitors[entries["visitor_source"]] = 1
+
+    return non_logged_in_visitors
+
+'''
+Additional Feature: Determines whether a visitor is logged in based on the visitor UUID
+'''
+
+def visitor_authenticated(visitor_uuid, visitors):
+
+    # Goes through the list of visitors
+    for visitor in visitors.keys():
+        # If the visitor UUID is found
+        if visitor == visitor_uuid:
+            for entry in visitors[visitor]:
+                # Verifies if the user is logged in by checking if the "visitor_username" is present
+                if "visitor_username" in list(entry.keys()):
+                    return entry["visitor_username"]
+    return False
