@@ -285,36 +285,30 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
 
     graph = graphviz.Digraph()
 
-    if visitor_uuid is None:
-        graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
+    # if visitor_uuid is None:
+    graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
 
-        visitors = doc_to_visitor(documents, doc_uuid)
-        # print(visitors)
+    visitors = doc_to_visitor(documents, doc_uuid)
+    # print(visitors)
 
-        for visitor in visitors:
-            # print(visitor)
-            graph.node(visitor, label=visitor[-4:])
-            graph.edge(visitor, 'doc')
+    if visitor_uuid is not None:
+        graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
-            docs = visitor_to_doc(documents, visitor)
-            # print("Visitor: " + visitor + " - Docs Visited: ", docs)
+    for visitor in visitors:
+        # print(visitor)
+        graph.node(visitor, label=visitor[-4:])
+        graph.edge(visitor, 'doc')
 
-            for doc in docs:
+        docs = visitor_to_doc(documents, visitor)
+        print("Visitor: " + visitor + " - Docs Visited: ", docs)
 
-                if(doc != doc_uuid):
-                    # print(doc)
-                    graph.node(doc, label=doc[-4:], shape='box')
+        for doc in docs:
 
-                    graph.edge(visitor, doc)
+            if(doc != doc_uuid):
+                # print(doc)
+                graph.node(doc, label=doc[-4:], shape='box')
 
-
-    else:
-
-        graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
-        
-        graph.node('vis', label=visitor_uuid[-4:], style='filled', color='#d0f4de')
-
-        graph.edge('vis', 'doc')
+                graph.edge(visitor, doc)
 
     dot_file_path = './also_likes_graph.dot'
     graph.render(dot_file_path, view=True)
