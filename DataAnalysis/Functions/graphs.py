@@ -288,7 +288,7 @@ def doc_overview_graph(documents, doc_uuid=None):
         timestamp_count = most_popular_time_documents(documents,doc_uuid)
     else:
         timestamp_count = most_popular_time_documents(documents,doc_uuid= None)
-        
+
     timestamps, counts = zip(*sorted(timestamp_count.items()))
 
     plt.plot(timestamps, counts, marker='o')
@@ -319,6 +319,24 @@ def visitor_overview_graph(documents, visitor_uuid):
     vis_time = plt.show()
 
     return vis_time
+
+def ip_to_loc_graph(documents, ip_address=None):
+
+    loc_count = most_popular_time_documents(documents,ip_address=None)
+
+    location, count = zip(*loc_count.items())
+
+    # Plot the pie chart
+    plt.pie(count, labels=location, autopct='%1.1f%%', startangle=90,textprops={'rotation': 45})
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.title('Country Pie Chart', x=0.05)
+
+    # Show the plot
+    ipLocPie = plt.show()
+
+    return ipLocPie
+
 
 def logged_in_graph(visitors):
 

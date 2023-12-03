@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc):
 
             frame = F(container, self)
 
@@ -78,13 +78,18 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
 
-        button7 = tk.Button(self, text="Doc Overview",
+        button7 = tk.Button(self, text="Document Overview",
                             command=lambda: controller.show_frame(DocOverview))
         button7.pack(pady=10)
 
         button5 = tk.Button(self, text="Visitor Overview",
                             command=lambda: controller.show_frame(VisitorOverview))
         button5.pack(pady=10)
+
+        button8 = tk.Button(self, text="User Location",
+                            command=lambda: controller.show_frame(UserLoc))
+        button8.pack(pady=10)
+
 
         button6 = tk.Button(self, text="Logged In Users",
                             command=lambda: controller.show_frame(LogInView))
@@ -325,6 +330,24 @@ class VisitorOverview(tk.Frame):
     def plot_vis_time(self, vis_uuid):
         documents, visitors, json_data = read_file(file_path)
         visitor_overview_graph(documents, vis_uuid)
+
+class UserLoc(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Location of User", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_location())
+        buttonplot.pack(pady=10)    
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+    def plot_location(self):
+        documents, visitors, json_data = read_file(file_path)
+        ip_to_loc_graph(documents)
 
 class LogInView(tk.Frame):
 
