@@ -188,20 +188,13 @@ Enter Option (1 or 2): ''')
         print("Most Popular Times for visitor {visitor_uuid}:\n".format(visitor_uuid=visitor_uuid))
         for i in list(result.keys()):
             print("{time}: {num} views".format(time=i, num=result[i]))
-    
-    elif args.task_id == "6d":
-        a = input("Enter IP Address: ")
-        print()
-        result = ip_to_location(documents, a)
-        for i in result:
-            print(i, result[i])
 
-    elif args.task_id == "6e":
+    elif args.task_id == "6d":
         result = ip_to_location(documents)
         for i in result:
             print(i, result[i])
 
-    elif args.task_id == "6f":
+    elif args.task_id == "6e":
 
         logged_in_users = logged_in_visitors(visitors)
         non_logged_in_users = non_logged_in_visitors(visitors)
@@ -222,7 +215,7 @@ Enter Option (1 or 2): ''')
         for i in non_logged_in_users:
             print(i.capitalize() + "\t" + str(non_logged_in_users[i]))
 
-    elif args.task_id == "6g":
+    elif args.task_id == "6f":
         
         result = visitor_authenticated(visitor_uuid, visitors)
 
