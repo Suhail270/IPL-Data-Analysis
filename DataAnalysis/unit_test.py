@@ -21,7 +21,7 @@ from Functions.graphs import (countries_histogram,
 
 from Functions.gui import startGUI
 
-import pytest
+import pytest, pycountry, pycountry_convert as pc
 
 # Testing if exception is raised when an invalid file path is entered.
 def testInvalidFilePath():
@@ -68,6 +68,39 @@ def testValidVisitorId():
    _, visitors, _ = read_file(file_path)
 
    assert validation(visitor_uuid=visitor_uuid, visitors=visitors), True
+
+def testCountryCount():
+   
+      file_path = 'DataAnalysis/Dataset/sample_small.json'
+      doc_uuid = '130323125939-5f4318404cda4025a2463c66435ad7c8'
+      assert_list = []
+
+      _, visitors, json_data = read_file(file_path)
+
+      country_count, _ = views_country(json_data, doc_uuid)
+
+      for i in country_count:
+         if i not in assert_list:
+            assert_list.append(pycountry.countries.get(alpha_2=i).name)
+
+      assert len(assert_list) == 1 and assert_list[0] == "Argentina" 
+
+def testContinentCount():
+   
+      file_path = 'DataAnalysis/Dataset/sample_small.json'
+      doc_uuid = '130323125939-5f4318404cda4025a2463c66435ad7c8'
+      assert_list = []
+
+      _, visitors, json_data = read_file(file_path)
+
+      country_count, _ = views_country(json_data, doc_uuid)
+
+      for i in country_count:
+         if i not in assert_list:
+            assert_list.append(pc.convert_continent_code_to_continent_name((pc.country_alpha2_to_continent_code(i))))
+
+   
+      assert len(assert_list) == 1 and assert_list[0] == "South America" 
 
 def testAvidReaders():
 
