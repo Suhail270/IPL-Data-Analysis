@@ -58,7 +58,7 @@ def testValidDocId():
    doc_uuid = '140224093301-60151c849f742e45bfb63d18ab9ded78'
    documents, _, _ = read_file(file_path)
 
-   assert True, validation(doc_uuid=doc_uuid, documents=documents)
+   assert validation(doc_uuid=doc_uuid, documents=documents), True
 
 # Asserting true if valid visitor UUID is entered.
 def testValidVisitorId():
@@ -67,7 +67,16 @@ def testValidVisitorId():
    visitor_uuid = '849bb060cb110347'
    _, visitors, _ = read_file(file_path)
 
-   assert True, validation(visitor_uuid=visitor_uuid, visitors=visitors)
+   assert validation(visitor_uuid=visitor_uuid, visitors=visitors), True
+
+def testAvidReaders():
+
+   file_path = 'DataAnalysis/Dataset/sample_small.json'
+
+   _, visitors, _ = read_file(file_path)
+   top_10, values = avid_readers(visitors)
+
+   assert all(values[i] >= values[i + 1] for i in range(len(values) - 1)), True
 
 # Testing if also_likes functionality works correctly.
 def testAlsoLikes():
@@ -77,3 +86,4 @@ def testAlsoLikes():
       documents, _, _ = read_file(file_path)
 
       assert len(list(also_likes(documents, doc_uuid).keys())) > 1
+

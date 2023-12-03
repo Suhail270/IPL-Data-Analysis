@@ -30,6 +30,9 @@ from Functions.graphs import (countries_histogram,
 
 from Functions.gui import startGUI
 
+import pycountry
+import pycountry_convert as pc
+
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
 # Example usage - python cw2.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 6f -f Dataset/sample_small.json
 # Example usage - python3.11 cw2.py -u 98ac6a1ca9476771 -d 140222104953-4a9c401847f56cbad2cb7376727cb4fe -t 5c -f Dataset/sample_3m_lines.json
@@ -76,30 +79,49 @@ def execute_task(args):
         sys.exit(1)
 
     if args.task_id == "2a":
+
+        country_count, _ = views_country(json_data, doc_uuid)
+        print("\nDocument UUID: {uuid}\n".format(uuid=doc_uuid))
+
+        for i in country_count:
+            print("Country - {country} | Number of Views - {count}\n".format(country = pycountry.countries.get(alpha_2=i).name, count = country_count[i]))
+        
         countries_histogram(json_data, doc_uuid)
 
     elif args.task_id == "2b":
-        _ , countries = views_country(json_data, doc_uuid)
+
+        data, countries = views_country(json_data, doc_uuid)
+        print("\nDocument UUID: {uuid}\n".format(uuid=doc_uuid))
+        
+        for i in data:
+            print("Continent - {continent} | Number of Views - {count}\n".format(continent = pc.convert_continent_code_to_continent_name((pc.country_alpha2_to_continent_code(i))), count = data[i]))
+
         continents_histogram(countries)
     
     elif args.task_id == "3a":
         browser_count = view_broswer(json_data)
+        
+        print("\nAll Broswers (Unformatted):\n")
+        for i in browser_count:
+            print("{browser}: {count}".format(browser=i, count=browser_count[i]))
+        print()
+
         browser_histogram(browser_count)
     
     elif args.task_id == "3b":
         browser_count = view_broswer(json_data)
         # Gets the occurence of each browser using view_browser.
         format_browser_count = format_browser(browser_count)
-        print("All Broswers:\n")
+        print("All Broswers (Formatted):\n")
         for i in format_browser_count:
             print("{browser}: {count}".format(browser=i, count=format_browser_count[i]))
         format_browser_histogram(format_browser_count)
 
     elif args.task_id == "4":
-        top_10 = avid_readers(visitors)
+        top_10, values = avid_readers(visitors)
         print("Top 10 avid readers:\n")
         for i in range(len(top_10)):
-            print("Reader {num}'s UUID: {uuid}".format(num=i+1, uuid=top_10[i]))
+            print("Reader {num}'s UUID: {uuid}\nReading Time - {time}\n".format(num=i+1, uuid=top_10[i], time=values[i]))
 
     elif args.task_id == "5a":
         visitor_ids = doc_to_visitor(documents, doc_uuid)
