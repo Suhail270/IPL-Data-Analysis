@@ -32,6 +32,7 @@ from Functions.gui import startGUI
 
 # file_path = 'DataAnalysis/Dataset/sample_small.json'
 # Example usage - python cw2.py -u aaa4eaf77abab0b2 -d 130323125939-5f4318404cda4025a2463c66435ad7c8 -t 6f -f Dataset/sample_small.json
+# Example usage - python3.11 cw2.py -u 98ac6a1ca9476771 -d 140222104953-4a9c401847f56cbad2cb7376727cb4fe -t 5c -f Dataset/sample_3m_lines.json
 
 '''
 Defines the syntax for passing command line arguments. Failure to adhering to this syntax will raise an exception.
@@ -115,11 +116,20 @@ def execute_task(args):
             print("Document {num}'s UUID: {uuid}".format(num=i+1, uuid=document_ids[i]))
     
     elif args.task_id == "5c":
-        print("Document UUID: {uuid}".format(uuid=doc_uuid))
+
         also_like_func = also_likes(documents, doc_uuid)
+
+        print("Document UUID: {uuid}".format(uuid=doc_uuid))
         print("Readers of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
+
+        count = 0
+
         for i in also_like_func:
-            print(i)
+            if count == 10:
+                break
+            print("{document} - Read by {num} other readers".format(document=i, num=sum(list(also_like_func[i].values()))))
+            print("Other readers include: {readers}\n".format(readers=list(also_like_func[i].keys())))
+            count+=1
     
     elif args.task_id == "5d":
 
@@ -150,8 +160,13 @@ Enter Option (1 or 2): ''')
         print("Document UUID: {uuid}".format(uuid=doc_uuid))
         print("Readers of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
 
+        count = 0
+
         for i in also_like_func:
+            if count == 10:
+                break
             print("{document} - Read by {num} other readers".format(document=i, num=also_like_func[i]))
+            count+=1
             
         print("\nSorting Function: {sort}".format(sort=sorting_text))
     
