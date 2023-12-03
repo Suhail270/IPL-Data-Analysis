@@ -38,7 +38,7 @@ def also_likes_testing(documents, doc_reader_count):
             print(i, doc_reader_count)
 
 '''
-Additional Feature: Sorts dictionaries in descending order based on the values.
+Additional Feature: Sorts dictionaries in ascending/descending order based on the values.
 '''
 
 def sortingfunc_test(doc_reader_count, reverse):
