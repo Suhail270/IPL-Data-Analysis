@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview):
 
             frame = F(container, self)
 
@@ -77,6 +77,10 @@ class HomePage(tk.Frame):
         button5 = tk.Button(self, text="Also Likes Graph",
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
+
+        button7 = tk.Button(self, text="Doc Overview",
+                            command=lambda: controller.show_frame(DocOverview))
+        button7.pack(pady=10)
 
         button5 = tk.Button(self, text="Visitor Overview",
                             command=lambda: controller.show_frame(VisitorOverview))
@@ -339,6 +343,38 @@ class LogInView(tk.Frame):
     def plot_log_in(self):
         documents, visitors, json_data = read_file(file_path)
         logged_in_graph(visitors)
+
+class DocOverview(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Most Popular for a visitor to view documents", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        doc_uuid_label = tk.Label(self, text="Document UUID: (Optional)")
+        doc_uuid_label.pack(pady=5)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_doc_time(self.doc_uuid_entry.get()))
+        buttonplot.pack(pady=10)  
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10) 
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.vis_uuid_entry.delete(0, tk.END) 
+
+    def plot_doc_time(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        if doc_uuid is None or doc_uuid == '':
+            doc_overview_graph(documents)
+        else:
+            doc_overview_graph(documents, doc_uuid)
         
 def startGUI():
     app = DataVisualise()

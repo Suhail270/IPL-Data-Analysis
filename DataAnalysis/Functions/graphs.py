@@ -282,21 +282,24 @@ def format_browser_pie(browser_count):
 
     return barFormatBrowser
 
-# def doc_overview_graph(documents, doc_uuid=None):
+def doc_overview_graph(documents, doc_uuid=None):
 
-#     timestamp_count = most_popular_time_documents(documents,doc_uuid=None)
-    
-#     timestamps, counts = zip(*sorted(timestamp_count.items()))
+    if doc_uuid is not None:
+        timestamp_count = most_popular_time_documents(documents,doc_uuid)
+    else:
+        timestamp_count = most_popular_time_documents(documents,doc_uuid= None)
+        
+    timestamps, counts = zip(*sorted(timestamp_count.items()))
 
-#     plt.plot(timestamps, counts, marker='o')
-#     plt.xlabel('Timestamps')
-#     plt.ylabel('Counts')
-#     plt.title('Popular Times')
-#     plt.xticks(rotation=45)
+    plt.plot(timestamps, counts, marker='o')
+    plt.xlabel('Timestamps')
+    plt.ylabel('Counts')
+    plt.title('Popular Times')
+    plt.xticks(rotation=45)
 
-#     doc_time = plt.show()
+    doc_time = plt.show()
 
-#     return doc_time
+    return doc_time
 
 
 def visitor_overview_graph(documents, visitor_uuid):
