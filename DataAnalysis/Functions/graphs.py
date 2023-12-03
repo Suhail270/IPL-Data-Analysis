@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from Functions.cw_requirements import views_country, group_country, format_browser, doc_to_visitor
+from Functions.cw_requirements import views_country, group_country, format_browser, doc_to_visitor, visitor_to_doc
 import graphviz
 
 '''
@@ -296,7 +296,20 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
             graph.node(visitor, label=visitor[-4:])
             graph.edge(visitor, 'doc')
 
+            docs = visitor_to_doc(documents, visitor)
+            # print("Visitor: " + visitor + " - Docs Visited: ", docs)
+
+            for doc in docs:
+
+                if(doc != doc_uuid):
+                    # print(doc)
+                    graph.node(doc, label=doc[-4:], shape='box')
+
+                    graph.edge(visitor, doc)
+
+
     else:
+
         graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
         
         graph.node('vis', label=visitor_uuid[-4:], style='filled', color='#d0f4de')
@@ -304,6 +317,6 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
         graph.edge('vis', 'doc')
 
     dot_file_path = './also_likes_graph.dot'
-    graph.render(dot_file_path, view=False)
+    graph.render(dot_file_path, view=True)
 
 
