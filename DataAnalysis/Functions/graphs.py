@@ -370,7 +370,7 @@ def logged_in_graph(visitors):
 def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
 
     graph = graphviz.Digraph()
-    
+
     # if visitor_uuid is not None:
     #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
@@ -391,6 +391,9 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
             graph.edge(reader, doc)
 
         count += 1
+
+    dot_file_path = './also_likes_graph.dot'
+    graph.render(dot_file_path, view=True)
 
 
     # visitors = doc_to_visitor(documents, doc_uuid)
@@ -415,7 +418,6 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
 
     #             graph.edge(visitor, doc)
 
-    dot_file_path = './also_likes_graph.dot'
-    graph.render(dot_file_path, view=True)
+    
 
 
