@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from Functions.cw_requirements import views_country, group_country, format_browser, doc_to_visitor, visitor_to_doc
-from .additional import most_popular_time_documents, most_popular_time_visitors, logged_in_visitors, non_logged_in_visitors
+from .additional import most_popular_time_documents, most_popular_time_visitors, logged_in_visitors, non_logged_in_visitors, ip_to_location
 import graphviz
 
 '''
@@ -322,7 +322,7 @@ def visitor_overview_graph(documents, visitor_uuid):
 
 def ip_to_loc_graph(documents, ip_address=None):
 
-    loc_count = most_popular_time_documents(documents,ip_address=None)
+    loc_count = ip_to_location(documents,ip_address=None)
 
     location, count = zip(*loc_count.items())
 
