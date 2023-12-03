@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from Functions.cw_requirements import views_country, group_country, format_browser, doc_to_visitor, visitor_to_doc
+from .additional import most_popular_time_documents, most_popular_time_visitors
 import graphviz
 
 '''
@@ -280,6 +281,42 @@ def format_browser_pie(browser_count):
     barFormatBrowser = plt.show()
 
     return barFormatBrowser
+
+# def doc_overview_graph(documents, doc_uuid=None):
+
+#     timestamp_count = most_popular_time_documents(documents,doc_uuid=None)
+    
+#     timestamps, counts = zip(*sorted(timestamp_count.items()))
+
+#     plt.plot(timestamps, counts, marker='o')
+#     plt.xlabel('Timestamps')
+#     plt.ylabel('Counts')
+#     plt.title('Popular Times')
+#     plt.xticks(rotation=45)
+
+#     doc_time = plt.show()
+
+#     return doc_time
+
+
+def visitor_overview_graph(documents, visitor_uuid):
+
+    visited_documents = visitor_to_doc(documents, visitor_uuid)
+
+    timestamp_count = most_popular_time_visitors(visited_documents, documents)
+    
+    timestamps, counts = zip(*sorted(timestamp_count.items()))
+
+    plt.plot(timestamps, counts, marker='o')
+    plt.xlabel('Timestamps')
+    plt.ylabel('Counts')
+    plt.title('Popular Times')
+    plt.xticks(rotation=45)
+
+    vis_time = plt.show()
+
+    return vis_time
+
 
 def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
 

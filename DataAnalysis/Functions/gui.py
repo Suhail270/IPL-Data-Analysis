@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview):
 
             frame = F(container, self)
 
@@ -78,6 +78,10 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
 
+        button5 = tk.Button(self, text="Visitor Overview",
+                            command=lambda: controller.show_frame(VisitorOverview))
+        button5.pack(pady=10)
+
 
 
 class CountryPlot(tk.Frame):
@@ -102,12 +106,6 @@ class CountryPlot(tk.Frame):
         buttonpie = tk.Button(self, text="Plot Pie Chart", command=lambda: self.plot_country_pie(self.doc_uuid_entry.get()))
         buttonpie.pack(pady=10)
 
-        # fig, ax = plt.subplots()
-        # ax.clear()
-        # # Add a canvas to display the plot
-        # self.canvas = FigureCanvasTkAgg(fig, master=self)
-        # self.canvas.get_tk_widget().pack(pady=10)
-
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
@@ -118,13 +116,6 @@ class CountryPlot(tk.Frame):
 
         # Clear the text box
         self.doc_uuid_entry.delete(0, tk.END)
-        
-        # Create a new empty plot on the current axis
-        # fig, ax = plt.subplots()
-        # ax.clear()
-        # Update the canvas with the new empty plot
-        # self.canvas.figure = fig
-        # self.canvas.draw()
     
     def plot_country_histogram(self, doc_uuid):
         # Get documents, visitors, and json_data from the file
@@ -223,8 +214,6 @@ class BrowserPlot(tk.Frame):
         browser_bar(browser_count)
 
 
-
-
 class FormatBrowserPlot(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -273,13 +262,17 @@ class AlsoLikes(tk.Frame):
         self.doc_uuid_entry = tk.Entry(self, width=50)
         self.doc_uuid_entry.pack(pady=10)
 
-        vis_uuid_label = tk.Label(self, text="Visitor UUID:")
+        vis_uuid_label = tk.Label(self, text="Visitor UUID: (Optional)")
         vis_uuid_label.pack(pady=5)
         self.vis_uuid_entry = tk.Entry(self, width=50)
         self.vis_uuid_entry.pack(pady=10)
 
         buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get()))
         buttonplot.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10)
 
     def plot_also_likes(self, doc_uuid, vis_uuid=None):
         documents, visitors, json_data = read_file(file_path)
@@ -289,6 +282,33 @@ class AlsoLikes(tk.Frame):
         else:
             also_likes_graph(documents, doc_uuid, vis_uuid)
 
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.doc_uuid_entry.delete(0, tk.END)
+        self.vis_uuid_entry.delete(0, tk.END)
+
+class VisitorOverview(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Most Popular for a visitor to view documents", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        vis_uuid_label = tk.Label(self, text="Visitor UUID:")
+        vis_uuid_label.pack(pady=5)
+        self.vis_uuid_entry = tk.Entry(self, width=50)
+        self.vis_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_vis_time(self.vis_uuid_entry.get()))
+        buttonplot.pack(pady=10)    
+
+    def plot_vis_time(self, vis_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        visitor_overview_graph(documents, vis_uuid)
+            
+        
 
         
 def startGUI():
