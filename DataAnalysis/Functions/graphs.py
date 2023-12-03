@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from Functions.cw_requirements import views_country, group_country, format_browser, doc_to_visitor, visitor_to_doc
+from Functions.cw_requirements import *
 from .additional import most_popular_time_documents, most_popular_time_visitors, logged_in_visitors, non_logged_in_visitors, ip_to_location
 import graphviz
 
@@ -372,29 +372,49 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
     graph = graphviz.Digraph()
 
     # if visitor_uuid is None:
-    graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
-
-    visitors = doc_to_visitor(documents, doc_uuid)
-    # print(visitors)
+    
 
     if visitor_uuid is not None:
         graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
-    for visitor in visitors:
-        # print(visitor)
-        graph.node(visitor, label=visitor[-4:])
-        graph.edge(visitor, 'doc')
+    also_like_func = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func=2)
 
-        docs = visitor_to_doc(documents, visitor)
-        print("Visitor: " + visitor + " - Docs Visited: ", docs)
+    count = 0
 
-        for doc in docs:
+    for doc in also_like_func:
+        if count == 10:
+            break
+        readers = list(also_like_func[doc].keys())
 
-            if(doc != doc_uuid):
-                # print(doc)
-                graph.node(doc, label=doc[-4:], shape='box')
+        graph.node(doc, label=doc[-4:], shape='box')
+        for reader in readers:
+            graph.node(reader)
+            graph.edge(reader, doc)
 
-                graph.edge(visitor, doc)
+        count += 1
+
+
+    # visitors = doc_to_visitor(documents, doc_uuid)
+    # # print(visitors)
+
+    # if visitor_uuid is not None:
+    #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
+
+    # for visitor in visitors:
+    #     # print(visitor)
+    #     graph.node(visitor, label=visitor[-4:])
+    #     graph.edge(visitor, 'doc')
+
+    #     docs = visitor_to_doc(documents, visitor)
+    #     print("Visitor: " + visitor + " - Docs Visited: ", docs)
+
+    #     for doc in docs:
+
+    #         if(doc != doc_uuid):
+    #             # print(doc)
+    #             graph.node(doc, label=doc[-4:], shape='box')
+
+    #             graph.edge(visitor, doc)
 
     dot_file_path = './also_likes_graph.dot'
     graph.render(dot_file_path, view=True)
