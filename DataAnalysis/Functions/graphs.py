@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from Functions.cw_requirements import views_country, group_country, format_browser
+import graphviz
 
 '''
 Plots a histogram for the number of views from each country
@@ -279,4 +280,22 @@ def format_browser_pie(browser_count):
     barFormatBrowser = plt.show()
 
     return barFormatBrowser
+
+def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
+
+    graph = graphviz.Digraph()
+
+    if visitor_uuid is None:
+        graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
+
+    else:
+        graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
+        
+        graph.node('vis', label=visitor_uuid[-4:], style='filled', color='#d0f4de')
+
+        graph.edge('vis', 'doc')
+
+    dot_file_path = './also_likes_graph.dot'
+    graph.render(dot_file_path, view=False)
+
 

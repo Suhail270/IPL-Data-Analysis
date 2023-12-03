@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes):
 
             frame = F(container, self)
 
@@ -73,6 +73,10 @@ class HomePage(tk.Frame):
         button3 = tk.Button(self, text="Formatted Browser Plots",
                             command=lambda: controller.show_frame(FormatBrowserPlot))
         button3.pack(pady=10)
+
+        button5 = tk.Button(self, text="Also Likes Graph",
+                            command=lambda: controller.show_frame(AlsoLikes))
+        button5.pack(pady=10)
 
 
 
@@ -256,6 +260,35 @@ class FormatBrowserPlot(tk.Frame):
         documents, visitors, json_data = read_file(file_path)
         browser_count = view_broswer(json_data)
         format_browser_pie(browser_count)
+
+class AlsoLikes(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Also Likes Graph", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        doc_uuid_label = tk.Label(self, text="Document UUID:")
+        doc_uuid_label.pack(pady=5)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
+
+        vis_uuid_label = tk.Label(self, text="Visitor UUID:")
+        vis_uuid_label.pack(pady=5)
+        self.vis_uuid_entry = tk.Entry(self, width=50)
+        self.vis_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
+    def plot_also_likes(self, doc_uuid, vis_uuid=None):
+        documents, visitors, json_data = read_file(file_path)
+
+        if vis_uuid is None or vis_uuid == '':
+            also_likes_graph(documents, doc_uuid)
+        else:
+            also_likes_graph(documents, doc_uuid, vis_uuid)
+
 
         
 def startGUI():
