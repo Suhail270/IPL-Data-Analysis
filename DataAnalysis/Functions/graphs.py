@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from Functions.cw_requirements import views_country, group_country, format_browser, doc_to_visitor, visitor_to_doc
-from .additional import most_popular_time_documents, most_popular_time_visitors
+from .additional import most_popular_time_documents, most_popular_time_visitors, logged_in_visitors, non_logged_in_visitors
 import graphviz
 
 '''
@@ -316,6 +316,34 @@ def visitor_overview_graph(documents, visitor_uuid):
     vis_time = plt.show()
 
     return vis_time
+
+def logged_in_graph(visitors):
+
+    logged_in = logged_in_visitors(visitors)
+    non_logged_in = non_logged_in_visitors(visitors)
+
+
+    sources = list(set(list(logged_in.keys()) + list(non_logged_in.keys())))  # Convert set to list
+
+    logged_in_counts = [logged_in.get(source, 0) for source in sources]
+    non_logged_in_counts = [non_logged_in.get(source, 0) for source in sources]
+
+    bar_width = 0.35
+    index = range(len(sources))
+
+    sources_capitalized = [source.capitalize() for source in sources]
+
+    plt.bar(sources_capitalized, logged_in_counts, bar_width, label='Logged In', color='#1f77b4')
+    plt.bar(sources_capitalized, non_logged_in_counts, bar_width, label='Non-Logged In', bottom=logged_in_counts, color='#ff7f0e')
+
+    plt.xlabel('Visitor Source')
+    plt.ylabel('Visitor Count')
+    plt.title('Visitor Counts by Source')
+    plt.legend()
+
+    log_in_graph = plt.show()
+
+    return log_in_graph
 
 
 def also_likes_graph(documents, doc_uuid, visitor_uuid=None):

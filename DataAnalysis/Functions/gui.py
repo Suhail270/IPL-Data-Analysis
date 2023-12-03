@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView):
 
             frame = F(container, self)
 
@@ -81,6 +81,10 @@ class HomePage(tk.Frame):
         button5 = tk.Button(self, text="Visitor Overview",
                             command=lambda: controller.show_frame(VisitorOverview))
         button5.pack(pady=10)
+
+        button6 = tk.Button(self, text="Logged In Users",
+                            command=lambda: controller.show_frame(LogInView))
+        button6.pack(pady=10)
 
 
 
@@ -302,14 +306,39 @@ class VisitorOverview(tk.Frame):
         self.vis_uuid_entry.pack(pady=10)
 
         buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_vis_time(self.vis_uuid_entry.get()))
-        buttonplot.pack(pady=10)    
+        buttonplot.pack(pady=10)  
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10) 
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.vis_uuid_entry.delete(0, tk.END) 
 
     def plot_vis_time(self, vis_uuid):
         documents, visitors, json_data = read_file(file_path)
         visitor_overview_graph(documents, vis_uuid)
-            
-        
 
+class LogInView(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Logged in and Logged Out Users", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_log_in())
+        buttonplot.pack(pady=10)    
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+    def plot_log_in(self):
+        documents, visitors, json_data = read_file(file_path)
+        logged_in_graph(visitors)
         
 def startGUI():
     app = DataVisualise()
