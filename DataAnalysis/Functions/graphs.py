@@ -370,12 +370,9 @@ def logged_in_graph(visitors):
 def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
 
     graph = graphviz.Digraph()
-
-    # if visitor_uuid is None:
     
-
-    if visitor_uuid is not None:
-        graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
+    # if visitor_uuid is not None:
+    #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
     also_like_func = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func=2)
 
@@ -385,10 +382,12 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
         if count == 10:
             break
         readers = list(also_like_func[doc].keys())
-
-        graph.node(doc, label=doc[-4:], shape='box')
+        if doc == doc_uuid:
+            graph.node(doc, label=doc[-4:], shape='box', style='filled', color='#d0f4de')
+        else:
+            graph.node(doc, label=doc[-4:], shape='box')
         for reader in readers:
-            graph.node(reader)
+            graph.node(reader, label=reader[-4:])
             graph.edge(reader, doc)
 
         count += 1
