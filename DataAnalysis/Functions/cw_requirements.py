@@ -153,10 +153,10 @@ def avid_readers(visitors):
         count_dict[i] = sum(count_dict[i])
 
     # Sort visitors based on their total reading time in descending order
-    sorted_readers = sortingfunc_test(count_dict)
+    sorted_readers = sortingfunc_test(count_dict, True)
 
     # Return the top 10 visitors with the highest total reading time
-    return list(sorted_readers.keys())[0:10]
+    return list(sorted_readers.keys())[0:10], list(sorted_readers.values())[0:10]
 
 '''
 Takes a document UUID and returns all visitor UUIDs of readers of that document.
