@@ -420,6 +420,6 @@ class DocOverview(tk.Frame):
 def startGUI():
     app = DataVisualise()
     global file_path
-    file_path = 'Dataset/sample_small.json'
+    file_path = 'Dataset/sample_3m_lines.json'
 
     app.mainloop()
