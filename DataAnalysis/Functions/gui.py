@@ -26,7 +26,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc):
 
             frame = F(container, self)
 
@@ -50,6 +50,24 @@ class DataVisualise(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+# class FilePage(tk.Frame):
+
+#     def __init__(self, parent, controller):
+#         tk.Frame.__init__(self,parent)
+#         label = tk.Label(self, text="Enter the file path for the dataset", font=LARGE_FONT)
+#         label.pack(pady=10,padx=10)
+
+#         file_path_label = tk.Label(self, text="File Path:")
+#         file_path_label.pack(pady=5)
+#         self.file_path_entry = tk.Entry(self, width=50)
+#         self.file_path_entry.pack(pady=10)
+
+#         button2 = tk.Button(self, text="Next ->",
+#                             command=lambda: controller.show_frame(HomePage))
+#         button2.pack(pady=10)
+
+#         def get_file_path(self):
+#             return self.file_path_entry.get()
         
 class HomePage(tk.Frame):
 
@@ -78,9 +96,22 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
 
+        button7 = tk.Button(self, text="Document Overview",
+                            command=lambda: controller.show_frame(DocOverview))
+        button7.pack(pady=10)
+
         button5 = tk.Button(self, text="Visitor Overview",
                             command=lambda: controller.show_frame(VisitorOverview))
         button5.pack(pady=10)
+
+        button8 = tk.Button(self, text="User Location",
+                            command=lambda: controller.show_frame(UserLoc))
+        button8.pack(pady=10)
+
+
+        button6 = tk.Button(self, text="Logged In Users",
+                            command=lambda: controller.show_frame(LogInView))
+        button6.pack(pady=10)
 
 
 
@@ -302,14 +333,89 @@ class VisitorOverview(tk.Frame):
         self.vis_uuid_entry.pack(pady=10)
 
         buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_vis_time(self.vis_uuid_entry.get()))
-        buttonplot.pack(pady=10)    
+        buttonplot.pack(pady=10)  
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10) 
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.vis_uuid_entry.delete(0, tk.END) 
 
     def plot_vis_time(self, vis_uuid):
         documents, visitors, json_data = read_file(file_path)
         visitor_overview_graph(documents, vis_uuid)
-            
-        
 
+class UserLoc(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Location of User", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_location())
+        buttonplot.pack(pady=10)    
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+    def plot_location(self):
+        documents, visitors, json_data = read_file(file_path)
+        ip_to_loc_graph(documents)
+
+class LogInView(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Logged in and Logged Out Users", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_log_in())
+        buttonplot.pack(pady=10)    
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(HomePage))
+        button1.pack(pady=10)
+
+    def plot_log_in(self):
+        documents, visitors, json_data = read_file(file_path)
+        logged_in_graph(visitors)
+
+class DocOverview(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Most Popular for a visitor to view documents", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        doc_uuid_label = tk.Label(self, text="Document UUID: (Optional)")
+        doc_uuid_label.pack(pady=5)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_doc_time(self.doc_uuid_entry.get()))
+        buttonplot.pack(pady=10)  
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10) 
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.vis_uuid_entry.delete(0, tk.END) 
+
+    def plot_doc_time(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        if doc_uuid is None or doc_uuid == '':
+            doc_overview_graph(documents)
+        else:
+            doc_overview_graph(documents, doc_uuid)
         
 def startGUI():
     app = DataVisualise()
