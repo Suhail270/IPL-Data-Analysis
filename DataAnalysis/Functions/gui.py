@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
 from .graphs import *
-from tkinter import filedialog
 
 '''
 GUI for the program 
@@ -418,27 +417,9 @@ class DocOverview(tk.Frame):
         else:
             doc_overview_graph(documents, doc_uuid)
         
-# def startGUI():
-#     app = DataVisualise()
-#     global file_path
-#     file_path = 'Dataset/sample_small.json'
-
-#     app.mainloop()
-
-def get_file_path():
-    file_path = filedialog.askopenfilename(title="Select a JSON file", filetypes=[("JSON files", "*.json")])
-    return file_path
-
 def startGUI():
-    root = tk.Tk()
-    root.withdraw()  # Hide the main Tkinter window
-
-    global file_path
-    file_path = get_file_path()
-    
-    if not file_path:
-        # User canceled the file selection
-        return
-
     app = DataVisualise()
+    global file_path
+    file_path = 'Dataset/sample_3m_lines.json'
+
     app.mainloop()
