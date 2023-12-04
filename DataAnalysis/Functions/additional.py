@@ -28,24 +28,26 @@ Additional Feature: Goes through the dataset until it finds records that are sui
 and prints them.
 '''
 
-def also_likes_testing(documents, doc_reader_count):
+def also_likes_testing(documents, doc_reader_count, also_likes):
     # Iterate through each document UUID in the documents dictionary
     for i in documents.keys():
+        also_like_func = also_likes(documents, i)
         # Get the result of the also_likes function for the current document UUID
         # Check if the result has more than one document (indicating readership overlap)
-        if len(list(doc_reader_count.keys())) > 1:
-            # Print the document UUID and the result
-            print(i, doc_reader_count)
+        for j in also_like_func:
+            for k in also_like_func[j]:
+                   if also_like_func[j][k] > 1 and len(list(also_like_func[j].keys())) > 1:
+                     # Print the document UUID and the result
+                     print(i, also_like_func[i])
 
 '''
 Additional Feature: Sorts dictionaries in ascending/descending order based on the values.
 '''
 
 def sortingfunc_test(doc_reader_count, reverse):
-
     if type(doc_reader_count) is dict:
-        # Sort the document-reader count dictionary based on the count
-        return dict(sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse))
+        # Sort the document-reader count dictionary based on the count (inner dictionary)
+        return dict(sorted(doc_reader_count.items(), key=lambda item: list(item[1].values())[0], reverse=reverse))
     else:
         # Sort the list of tuples based on the count
         return sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse)

@@ -100,7 +100,7 @@ def execute_task(args):
     
     elif args.task_id == "3a":
         browser_count = view_broswer(json_data)
-        
+
         print("\nAll Broswers (Unformatted):\n")
         for i in browser_count:
             print("{browser}: {count}".format(browser=i, count=browser_count[i]))
@@ -147,7 +147,7 @@ def execute_task(args):
         count = 0
 
         for i in also_like_func:
-            if count == 10:
+            if count == 7:
                 break
             print("{document} - Read by {num} other readers".format(document=i, num=sum(list(also_like_func[i].values()))))
             print("Other readers include: {readers}\n".format(readers=list(also_like_func[i].keys())))
@@ -185,12 +185,11 @@ Enter Option (1 or 2): ''')
         count = 0
 
         for i in also_like_func:
-            if count == 10:
+            if count == 7:
                 break
-            print("{document} - Read by {num} other readers".format(document=i, num=also_like_func[i]))
+            print("{document} - Read by {num} other readers".format(document=i, num=sum(list(also_like_func[i].values()))))
+            print("Other readers include: {readers}\n".format(readers=list(also_like_func[i].keys())))
             count+=1
-            
-        print("\nSorting Function: {sort}".format(sort=sorting_text))
     
     elif args.task_id == "6a":
         result = most_popular_time_documents(documents)

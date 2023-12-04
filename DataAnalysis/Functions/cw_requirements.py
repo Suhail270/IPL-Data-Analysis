@@ -215,17 +215,16 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
         visitor_doc_relationship[visitor] = visitor_to_doc(documents, visitor)
 
     # Count the number of readers for each document
-    for i in visitor_doc_relationship.values():
-        for document in i:
+    for visitor, visited_documents in visitor_doc_relationship.items():
+        for document in visited_documents:
             # Check if the document is not already in the count_dict
             if document not in doc_reader_count:
-                # Initialize the count for the document and create a list for visitors
-                doc_reader_count[document] = {visitor: 1}
-            else:
-                # Increment the count for the document and add the visitor to the list
+                # Initialize the count for the document
+                doc_reader_count[document] = {}
+            
+            # Increment the count for the document and add the visitor to the list
+            doc_reader_count[document][visitor] = doc_reader_count[document].get(visitor, 0) + 1
 
-                if visitor not in list(doc_reader_count[document].keys()):
-                    doc_reader_count[document][visitor] = 1
 
     # Sort the documents based on the specified sorting function
     if sorting_func is not None:
