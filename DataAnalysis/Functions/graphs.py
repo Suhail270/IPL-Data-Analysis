@@ -387,6 +387,8 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
         else:
             graph.node(doc, label=doc[-4:], shape='box')
         for reader in readers:
+            if visitor_uuid is not None and visitor_uuid == reader:
+                graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
             graph.node(reader, label=reader[-4:])
             graph.edge(reader, doc)
 
