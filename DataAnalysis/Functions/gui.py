@@ -50,6 +50,24 @@ class DataVisualise(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+# class FilePage(tk.Frame):
+
+#     def __init__(self, parent, controller):
+#         tk.Frame.__init__(self,parent)
+#         label = tk.Label(self, text="Enter the file path for the dataset", font=LARGE_FONT)
+#         label.pack(pady=10,padx=10)
+
+#         file_path_label = tk.Label(self, text="File Path:")
+#         file_path_label.pack(pady=5)
+#         self.file_path_entry = tk.Entry(self, width=50)
+#         self.file_path_entry.pack(pady=10)
+
+#         button2 = tk.Button(self, text="Next ->",
+#                             command=lambda: controller.show_frame(HomePage))
+#         button2.pack(pady=10)
+
+#         def get_file_path(self):
+#             return self.file_path_entry.get()
         
 class HomePage(tk.Frame):
 
