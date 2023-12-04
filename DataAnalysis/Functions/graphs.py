@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-from Functions.cw_requirements import views_country, group_country, format_browser, doc_to_visitor, visitor_to_doc
-from .additional import most_popular_time_documents, most_popular_time_visitors
+from Functions.cw_requirements import *
+from .additional import most_popular_time_documents, most_popular_time_visitors, logged_in_visitors, non_logged_in_visitors, ip_to_location
 import graphviz
 
 '''
@@ -282,21 +282,24 @@ def format_browser_pie(browser_count):
 
     return barFormatBrowser
 
-# def doc_overview_graph(documents, doc_uuid=None):
+def doc_overview_graph(documents, doc_uuid=None):
 
-#     timestamp_count = most_popular_time_documents(documents,doc_uuid=None)
-    
-#     timestamps, counts = zip(*sorted(timestamp_count.items()))
+    if doc_uuid is not None:
+        timestamp_count = most_popular_time_documents(documents,doc_uuid)
+    else:
+        timestamp_count = most_popular_time_documents(documents,doc_uuid= None)
 
-#     plt.plot(timestamps, counts, marker='o')
-#     plt.xlabel('Timestamps')
-#     plt.ylabel('Counts')
-#     plt.title('Popular Times')
-#     plt.xticks(rotation=45)
+    timestamps, counts = zip(*sorted(timestamp_count.items()))
 
-#     doc_time = plt.show()
+    plt.plot(timestamps, counts, marker='o')
+    plt.xlabel('Timestamps')
+    plt.ylabel('Counts')
+    plt.title('Popular Times')
+    plt.xticks(rotation=45)
 
-#     return doc_time
+    doc_time = plt.show()
+
+    return doc_time
 
 
 def visitor_overview_graph(documents, visitor_uuid):
@@ -317,37 +320,106 @@ def visitor_overview_graph(documents, visitor_uuid):
 
     return vis_time
 
+def ip_to_loc_graph(documents, ip_address=None):
+
+    loc_count = ip_to_location(documents,ip_address=None)
+
+    location, count = zip(*loc_count.items())
+
+    # Plot the pie chart
+    plt.pie(count, labels=location, autopct='%1.1f%%', startangle=90,textprops={'rotation': 45})
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.title('Country Pie Chart', x=0.05)
+
+    # Show the plot
+    ipLocPie = plt.show()
+
+    return ipLocPie
+
+
+def logged_in_graph(visitors):
+
+    logged_in = logged_in_visitors(visitors)
+    non_logged_in = non_logged_in_visitors(visitors)
+
+
+    sources = list(set(list(logged_in.keys()) + list(non_logged_in.keys())))  # Convert set to list
+
+    logged_in_counts = [logged_in.get(source, 0) for source in sources]
+    non_logged_in_counts = [non_logged_in.get(source, 0) for source in sources]
+
+    bar_width = 0.35
+    index = range(len(sources))
+
+    sources_capitalized = [source.capitalize() for source in sources]
+
+    plt.bar(sources_capitalized, logged_in_counts, bar_width, label='Logged In', color='#1f77b4')
+    plt.bar(sources_capitalized, non_logged_in_counts, bar_width, label='Non-Logged In', bottom=logged_in_counts, color='#ff7f0e')
+
+    plt.xlabel('Visitor Source')
+    plt.ylabel('Visitor Count')
+    plt.title('Visitor Counts by Source')
+    plt.legend()
+
+    log_in_graph = plt.show()
+
+    return log_in_graph
+
 
 def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
 
     graph = graphviz.Digraph()
 
-    # if visitor_uuid is None:
-    graph.node('doc', label=doc_uuid[-4:], shape='box', style='filled', color='#d0f4de')
+    # if visitor_uuid is not None:
+    #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
-    visitors = doc_to_visitor(documents, doc_uuid)
-    # print(visitors)
+    also_like_func = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func=2)
 
-    if visitor_uuid is not None:
-        graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
+    count = 0
 
-    for visitor in visitors:
-        # print(visitor)
-        graph.node(visitor, label=visitor[-4:])
-        graph.edge(visitor, 'doc')
+    for doc in also_like_func:
+        if count == 10:
+            break
+        readers = list(also_like_func[doc].keys())
+        if doc == doc_uuid:
+            graph.node(doc, label=doc[-4:], shape='box', style='filled', color='#d0f4de')
+        else:
+            graph.node(doc, label=doc[-4:], shape='box')
+        for reader in readers:
+            if visitor_uuid is not None and visitor_uuid == reader:
+                graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
+            graph.node(reader, label=reader[-4:])
+            graph.edge(reader, doc)
 
-        docs = visitor_to_doc(documents, visitor)
-        print("Visitor: " + visitor + " - Docs Visited: ", docs)
-
-        for doc in docs:
-
-            if(doc != doc_uuid):
-                # print(doc)
-                graph.node(doc, label=doc[-4:], shape='box')
-
-                graph.edge(visitor, doc)
+        count += 1
 
     dot_file_path = './also_likes_graph.dot'
     graph.render(dot_file_path, view=True)
+
+
+    # visitors = doc_to_visitor(documents, doc_uuid)
+    # # print(visitors)
+
+    # if visitor_uuid is not None:
+    #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
+
+    # for visitor in visitors:
+    #     # print(visitor)
+    #     graph.node(visitor, label=visitor[-4:])
+    #     graph.edge(visitor, 'doc')
+
+    #     docs = visitor_to_doc(documents, visitor)
+    #     print("Visitor: " + visitor + " - Docs Visited: ", docs)
+
+    #     for doc in docs:
+
+    #         if(doc != doc_uuid):
+    #             # print(doc)
+    #             graph.node(doc, label=doc[-4:], shape='box')
+
+    #             graph.edge(visitor, doc)
+
+    
 
 
