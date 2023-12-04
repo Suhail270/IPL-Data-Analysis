@@ -139,19 +139,39 @@ def execute_task(args):
     
     elif args.task_id == "5c":
 
-        also_like_func = also_likes(documents, doc_uuid)
+        documents, visitors = also_likes(documents, doc_uuid)
+        # 100713205147-2ee05a98f1794324952eea5ca678c026 
+        # also_like_func = also_likes(documents, doc_uuid)
 
-        print("Document UUID: {uuid}".format(uuid=doc_uuid))
+        # print("Document UUID: {uuid}".format(uuid=doc_uuid))
         print("Readers of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
 
-        count = 0
+        for i in documents:
+            print(i, documents[i])
 
-        for i in also_like_func:
-            if count == 7:
-                break
-            print("{document} - Read by {num} other readers".format(document=i, num=sum(list(also_like_func[i].values()))))
-            print("Other readers include: {readers}\n".format(readers=list(also_like_func[i].keys())))
-            count+=1
+        print("\n\nVisitors:")
+
+        for i in visitors:
+            print(i, visitors[i])
+
+        # count = 0
+
+        # for i in also_like_func:
+        #     if count == 7:
+        #         break
+        #     print(i, also_like_func[i])
+        #     # print("{document} - Read by {num} other readers".format(document=i, num=sum(list(also_like_func[i].values()))))
+        #     # print("Other readers include: {readers}\n".format(readers=list(also_like_func[i].keys())))
+        #     count+=1
+        
+        # count = 0
+
+        # print("Most Common Visitors:\n")
+        # for i in most_common_visitors:
+        #     if count == 7:
+        #         break
+        #     print(i, most_common_visitors[i])
+        #     count+=1
     
     elif args.task_id == "5d":
 
