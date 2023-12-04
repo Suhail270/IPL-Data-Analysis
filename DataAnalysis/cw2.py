@@ -139,7 +139,26 @@ def execute_task(args):
     
     elif args.task_id == "5c":
 
-        documents, visitors = also_likes(documents, doc_uuid)
+        visitor_input = input('''\nWould you like to use the visitor UUID you entered into the terminal as a parameter?
+                              
+1. Yes
+2. No
+                              
+Enter Option (1 or 2): ''')
+        
+        while visitor_input not in ['''1''', '''2''']:
+            print("\nInvalid input. Please try again.\n")
+            visitor_input = input('''Would you like to use the visitor UUID you entered into the terminal as a parameter?
+1. Yes
+2. No
+                              
+Enter Option (1 or 2): ''')
+
+        if visitor_input == '''1''':                 
+            documents, visitors = also_likes(documents, doc_uuid, visitor_uuid=visitor_uuid)
+        else:
+            documents, visitors = also_likes(documents, doc_uuid)
+            
         # 100713205147-2ee05a98f1794324952eea5ca678c026 
         # also_like_func = also_likes(documents, doc_uuid)
 

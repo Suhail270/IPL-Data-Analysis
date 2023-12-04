@@ -245,10 +245,15 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
                 visitor_counter[visitor] += 1
 
     visitor_counter = dict(sorted(visitor_counter.items(), key=lambda item: item[1], reverse=True))
-    visitor_top_counter = {key: visitor_counter[key] for key in list(visitor_counter)[:3]}
+    visitor_counter = {key: visitor_counter[key] for key in list(visitor_counter)[:3]}
+
+    visitor_top_counter = visitor_counter.copy()
 
     if visitor_uuid is not None and visitor_uuid not in list(visitor_top_counter.keys()):
-        visitor_top_counter[visitor_uuid] = visitor_counter[visitor_uuid]
+        if visitor_uuid in list(visitor_top_counter.keys()):
+            visitor_top_counter[visitor_uuid] = visitor_counter[visitor_uuid]
+        else:
+            visitor_top_counter[visitor_uuid] = 0
 
     # print("\n\nVISITOR COUNTER: ", visitor_counter,"\n\n")
 
