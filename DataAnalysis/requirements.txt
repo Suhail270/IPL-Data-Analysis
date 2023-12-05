@@ -1,0 +1,4 @@
+matplotlib==3.7.2
+pycountry_convert==0.7.2
+pytest==6.2.5
+ua_parser==0.18.0
