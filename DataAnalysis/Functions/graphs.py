@@ -197,7 +197,7 @@ def browser_bar(browser_count):
     plt.xlabel('Browser')
     plt.xticks(rotation=90)
     plt.ylabel('Number of Occurrences')
-    plt.title('Browser Histogram')
+    plt.title('Browser Bar Graph')
     # plt.tight_layout()
 
     # Show the plot
@@ -251,7 +251,7 @@ def format_browser_bar(browser_count):
     plt.xticks(rotation=90)
     plt.ylabel('Number of Occurrences')
     plt.subplots_adjust(bottom=0.483)
-    plt.title('Formatted Browser Histogram')
+    plt.title('Formatted Browser Bar Graph')
     # plt.tight_layout()
 
     # Show the plot
@@ -275,7 +275,7 @@ def format_browser_pie(browser_count):
     plt.pie(count, labels=formated_browser, autopct='%1.1f%%', startangle=90,textprops={'rotation': 45})
     plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-    plt.title('Country Pie Chart', x=0.05)
+    plt.title('Formatted Browser Pie Chart', x=0.05)
 
     # Show the plot
     barFormatBrowser = plt.show()
@@ -367,15 +367,20 @@ def logged_in_graph(visitors):
     return log_in_graph
 
 
-def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
+def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
 
     graph = graphviz.Digraph()
 
     # if visitor_uuid is not None:
     #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
-    if visitor_uuid is None:
+    
+    if visitor_uuid is None and sorting_func == 1:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = 1)
+    elif visitor_uuid is None and sorting_func is None:
         documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func=2)
+    elif visitor_uuid is not None and sorting_func == 1:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=1)
     else:
         documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=2)
 
