@@ -357,11 +357,6 @@ class AlsoLikes(tk.Frame):
 
     def plot_also_likes(self, doc_uuid, vis_uuid=None, sort_func=None):
         documents, visitors, json_data = read_file(file_path)
-
-        # if sort_func == "Descending" or sort_func == "None":
-        #     al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
-        # else:
-        #     al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
         
         if vis_uuid is None or vis_uuid == '':
             if sort_func == "None":
