@@ -2,6 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
+from .additional import logged_in_visitors, non_logged_in_visitors
 from .graphs import *
 from tkinter import filedialog
 from tkinter import ttk 
@@ -417,15 +418,48 @@ class LogInView(tk.Frame):
         label.pack(pady=10,padx=10)
 
         buttonplot = tk.Button(self, text="Plot", command=lambda: self.plot_log_in())
-        buttonplot.pack(pady=10)    
+        buttonplot.pack(pady=10)
+
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 12))
+        self.result_label.pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(HomePage))
+                            command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
 
     def plot_log_in(self):
         documents, visitors, json_data = read_file(file_path)
+
+        logged_in_users = logged_in_visitors(visitors)
+        non_logged_in_users = non_logged_in_visitors(visitors)
+
+        result_text = "\nTotal Number of Visitors: {count}\n".format(count = len(visitors))
+
+        result_text += "\n\nNumber of Logged In Users: {count}\n".format(count = sum(list(logged_in_users.values())))
+
+        result_text += "\n  Source\t\tCount"
+
+        for i in logged_in_users:
+            result_text += "\n" + i.capitalize() + "  \t\t" + str(logged_in_users[i])
+
+        result_text += "\n\nNumber of Non-Logged In Users: {count}\n".format(count = sum(list(non_logged_in_users.values())))
+
+        result_text += "\n Source\t\tCount"
+
+        for i in non_logged_in_users:
+            result_text += "\n" + i.capitalize() + "\t\t" + str(non_logged_in_users[i])
+
+        # Update the label with the result
+        self.result_label.config(text=result_text)
+
         logged_in_graph(visitors)
+    
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.result_text = ""
+        self.result_label.config(text=self.result_text)
 
 class DocOverview(tk.Frame):
 
