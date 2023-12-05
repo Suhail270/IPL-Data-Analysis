@@ -325,16 +325,16 @@ class AlsoLikes(tk.Frame):
             if sort_func == "None":
                 also_likes_graph(documents, doc_uuid)
             elif sort_func == "Ascending":
-                also_likes_graph(documents, doc_uuid, sorting_func=1)
+                also_likes_graph(documents, doc_uuid, sorting_func=False)
             else:
-                also_likes_graph(documents, doc_uuid, sorting_func=2)
+                also_likes_graph(documents, doc_uuid, sorting_func=True)
         else:
             if sort_func == "None":
                 also_likes_graph(documents, doc_uuid, vis_uuid)
             elif sort_func == "Ascending":
-                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=1)
+                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
             else:
-                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=2)
+                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
             
 
     def back_to_home(self, controller):
