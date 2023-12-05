@@ -393,13 +393,16 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
         else:
             graph.node(visitor, label=visitor[-4:])
 
-        for doc in mapping[visitor]:
+        for doc in documents:
             if doc == doc_uuid:
                 graph.node('doc', label=doc[-4:], shape='box', style='filled', color='#60d394')
-                graph.edge(visitor, 'doc')
+                # graph.edge(visitor, 'doc')
+                if doc in mapping[visitor]:
+                    graph.edge(visitor, 'doc')
             else:
                 graph.node(doc, label=doc[-4:], shape='box')
-                graph.edge(visitor, doc)
+                if doc in mapping[visitor]:
+                    graph.edge(visitor, doc)
            
 
 
