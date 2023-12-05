@@ -155,23 +155,33 @@ Enter Option (1 or 2): ''')
 Enter Option (1 or 2): ''')
 
         if visitor_input == '''1''':                 
-            documents, visitors = also_likes(documents, doc_uuid, visitor_uuid=visitor_uuid)
+            documents, visitors, mapping = also_likes(documents, doc_uuid, visitor_uuid=visitor_uuid)
         else:
-            documents, visitors = also_likes(documents, doc_uuid)
+            documents, visitors, mapping = also_likes(documents, doc_uuid)
             
         # 100713205147-2ee05a98f1794324952eea5ca678c026 
         # also_like_func = also_likes(documents, doc_uuid)
 
         # print("Document UUID: {uuid}".format(uuid=doc_uuid))
-        print("Readers of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
+        print("\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
 
         for i in documents:
-            print(i, documents[i])
+            if documents[i]>1:
+                ending = "s."
+            else:
+                ending = "."
+            
+            print("{document}: Read by {count} other reader{suffix}".format(document=i, count=documents[i], suffix=ending))
 
-        print("\n\nVisitors:")
+
+        print("\n\nVisitors:\n")
 
         for i in visitors:
-            print(i, visitors[i])
+            if len(mapping[i]) > 0:
+                print("Visitor", i, "read", visitors[i], "other documents including", mapping[i][0] + ".")
+            else:
+                print("Visitor", i, "has not read any associated documents.")
+        print()
 
         # count = 0
 
