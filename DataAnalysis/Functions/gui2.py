@@ -377,7 +377,7 @@ class AlsoLikes(tk.Frame):
                 result_text += "Visitor {} read {} other documents including {}.\n".format(i, visitors[i], mapping[i][0])
             else:
                 result_text += "Visitor {} has not read any associated documents.\n".format(i)
-        result_text += ""
+        # result_text += ""
 
         # Update the label with the result
         self.result_label.config(text=result_text)
