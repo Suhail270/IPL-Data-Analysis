@@ -435,3 +435,4 @@ def startGUI():
 
     app = DataVisualise()
     app.mainloop()
+
