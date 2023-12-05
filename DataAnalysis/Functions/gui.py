@@ -42,11 +42,13 @@ class DataVisualise(tk.Tk):
 
         self.show_frame(HomePage)
 
-        window_width = 500
-        window_height = 570
+        window_width = 550
+        window_height = 600
         window_x = (self.winfo_screenwidth() - window_width) // 2
         window_y = (self.winfo_screenheight() - window_height) // 4
         self.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
+
+        self.title("Group 26 - Coursework 2")
 
     def show_frame(self, cont):
 
@@ -284,7 +286,7 @@ class AvidReaderPlot(tk.Frame):
         self.doc_uuid_entry = tk.Entry(self, width=50)
         self.doc_uuid_entry.pack(pady=10)
 
-        self.result_label = tk.Label(self, text="", font=("Helvetica", 8))
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 10))
         self.result_label.pack(pady=10)
 
         buttonplot = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_avid_reader(self.doc_uuid_entry.get()))
@@ -298,9 +300,9 @@ class AvidReaderPlot(tk.Frame):
         documents, visitors, json_data = read_file(file_path)
 
         top_10, values = avid_readers(visitors)
-        result_text = "Top 10 avid readers:\n"
+        result_text = "Top 10 avid readers:\n\n"
         for i in range(len(top_10)):
-            result_text += "Reader {num}'s UUID: {uuid}\nReading Time - {time}\n".format(num=i+1, uuid=top_10[i], time=values[i])
+            result_text += "\nReader {num}'s UUID: {uuid}\nReading Time - {time}\n".format(num=i+1, uuid=top_10[i], time=values[i])
 
         self.result_label.config(text=result_text)
 
@@ -343,10 +345,10 @@ class AlsoLikes(tk.Frame):
         dropdown_menu = ttk.Combobox(self, textvariable=self.dropdown_var, values=["None", "Ascending", "Descending"])
         dropdown_menu.pack(pady=10)
 
-        self.result_label = tk.Label(self, text="", font=("Helvetica", 8))
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 10))
         self.result_label.pack(pady=10)
 
-        buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get(), self.dropdown_var.get()))
+        buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.invoke_also_likes(controller))
         buttonplot.pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
@@ -356,46 +358,47 @@ class AlsoLikes(tk.Frame):
     def plot_also_likes(self, doc_uuid, vis_uuid=None, sort_func=None):
         documents, visitors, json_data = read_file(file_path)
 
-        if sort_func == "Descending" or sort_func == "None":
-            documents, visitors, mapping = also_likes(documents, doc_uuid, vis_uuid, sorting_func=True)
+        # if sort_func == "Descending" or sort_func == "None":
+        #     al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
+        # else:
+        #     al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
+        
+        if vis_uuid is None or vis_uuid == '':
+            if sort_func == "None":
+                al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid)
+            elif sort_func == "Ascending":
+                al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=False)
+            else:
+                al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=True)
         else:
-            documents, visitors, mapping = also_likes(documents, doc_uuid, vis_uuid, sorting_func=False)
-
-        result_text = "\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid)
-        for i in documents:
-            if documents[i]>1:
+            if sort_func == "None":
+               al_documents, visitors, mapping =  also_likes_graph(documents, doc_uuid, visitor_uuid=vis_uuid, sorting_func=True)
+            elif sort_func == "Ascending":
+                al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
+            else:
+                al_documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
+        
+        result_text = "\nReaders of Document UUID: {uuid} have also read:\n\n".format(uuid=doc_uuid)
+        for i in al_documents:
+            if al_documents[i]>1:
                 ending = "s."
             else:
                 ending = "."
 
-            result_text += "{document}: Read by {count} other reader{suffix}\n".format(document=i, count=documents[i], suffix=ending)
+            result_text += "{document} - Read by {count} other reader{suffix}\n".format(document=i, count=al_documents[i], suffix=ending)
         
-        result_text += "\n\nVisitors:\n"
+        result_text += "\n\nVisitors:\n\n"
 
         for i in visitors:
             if len(mapping[i]) > 0:
-                result_text += "Visitor {} read {} other documents including {}.\n".format(i, visitors[i], mapping[i][0])
+                result_text += "Visitor {vis_id} read {count} other documents including {eg_doc}.\n".format(vis_id = i, count = visitors[i], eg_doc = mapping[i][0])
             else:
-                result_text += "Visitor {} has not read any associated documents.\n".format(i)
-        # result_text += ""
+                result_text += "Visitor {vis_id} has not read any associated documents.\n".format(vis_id = i)
+                
+        result_text += ""
 
         # Update the label with the result
         self.result_label.config(text=result_text)
-        
-        if vis_uuid is None or vis_uuid == '':
-            if sort_func == "None":
-                also_likes_graph(documents, doc_uuid)
-            elif sort_func == "Ascending":
-                also_likes_graph(documents, doc_uuid, sorting_func=False)
-            else:
-                also_likes_graph(documents, doc_uuid, sorting_func=True)
-        else:
-            if sort_func == "None":
-                also_likes_graph(documents, doc_uuid, vis_uuid)
-            elif sort_func == "Ascending":
-                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
-            else:
-                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
             
 
     def back_to_home(self, controller):
@@ -407,6 +410,11 @@ class AlsoLikes(tk.Frame):
         # Clear the text box
         self.result_text = ""
         self.result_label.config(text=self.result_text)
+
+    def invoke_also_likes(self, controller):
+
+        doc_uuid, visitor_uuid, sort = self.doc_uuid_entry.get(), self.vis_uuid_entry.get(), self.dropdown_var.get()
+        self.plot_also_likes(doc_uuid, visitor_uuid, sort)
 
 class VisitorOverview(tk.Frame):
 
@@ -568,10 +576,10 @@ class LogInAuthenticate(tk.Frame):
         result_text = "\nVisitor UUID: {uuid}\n".format(uuid=visitor_uuid)
 
         if result is not False:
-            result_text += "The visitor is logged in.\nUsername: " + result + "\n"
+            result_text += "The visitor is logged in.\n\nUsername: " + result + "\n"
         
         else:
-            result_text += "The visitor is not logged in.\n"
+            result_text += "\nThe visitor is not logged in.\n"
 
         # Update the label with the result
         self.result_label.config(text=result_text)
@@ -602,4 +610,3 @@ def startGUI():
 
     app = DataVisualise()
     app.mainloop()
-

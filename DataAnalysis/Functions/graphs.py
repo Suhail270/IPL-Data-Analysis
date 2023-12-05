@@ -394,19 +394,16 @@ def logged_in_graph(visitors):
 def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
 
     graph = graphviz.Digraph()
-
-    # if visitor_uuid is not None:
-    #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
-
     
     if visitor_uuid is None and sorting_func == False:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = False)
+        al_documents, visitors, mapping = also_likes(documents, doc_uuid, sorting_func = False)
     elif visitor_uuid is None and sorting_func is None:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = True)
+        al_documents, visitors, mapping = also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func = True)
+
     elif visitor_uuid is not None and sorting_func == False:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=False)
+        al_documents, visitors, mapping = also_likes(documents, doc_uuid, visitor_uuid=visitor_uuid, sorting_func=False)
     else:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=True)
+        al_documents, visitors, mapping = also_likes(documents, doc_uuid, visitor_uuid=visitor_uuid, sorting_func=True)
 
     with graph.subgraph() as visitor_subgraph:
         visitor_subgraph.attr(rank='same')
@@ -422,7 +419,7 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
             with graph.subgraph() as doc_subgraph:
                 doc_subgraph.attr(rank='same') 
 
-                for doc in documents:
+                for doc in al_documents:
                     if doc == doc_uuid:
                         doc_subgraph.node('doc', label=doc[-4:], shape='box', style='filled', color='#60d394')
                         # graph.edge(visitor, 'doc')
@@ -438,47 +435,4 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
     dot_file_path = './also_likes_graph.dot'
     graph.render(dot_file_path, view=True)
 
-
-    # visitors = doc_to_visitor(documents, doc_uuid)
-    # # print(visitors)
-
-    # if visitor_uuid is not None:
-    #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
-
-    # for visitor in visitors:
-    #     # print(visitor)
-    #     graph.node(visitor, label=visitor[-4:])
-    #     graph.edge(visitor, 'doc')
-
-    #     docs = visitor_to_doc(documents, visitor)
-    #     print("Visitor: " + visitor + " - Docs Visited: ", docs)
-
-    #     for doc in docs:
-
-    #         if(doc != doc_uuid):
-    #             # print(doc)
-    #             graph.node(doc, label=doc[-4:], shape='box')
-
-    #             graph.edge(visitor, doc)
-
-    
-# ===================================================
-
-# count = 0
-
-#     for doc in also_like_func:
-#         if count == 10:
-#             break
-#         readers = list(also_like_func[doc].keys())
-#         if doc == doc_uuid:
-#             graph.node(doc, label=doc[-4:], shape='box', style='filled', color='#d0f4de')
-#         else:
-#             graph.node(doc, label=doc[-4:], shape='box')
-#         for reader in readers:
-#             if visitor_uuid is not None and visitor_uuid == reader:
-#                 graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
-#             graph.node(reader, label=reader[-4:])
-#             graph.edge(reader, doc)
-
-#         count += 1
-
+    return al_documents, visitors, mapping
