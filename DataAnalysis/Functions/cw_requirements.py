@@ -254,7 +254,7 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
     visitor_top_counter = {key: visitor_top_counter[key] for key in list(visitor_top_counter)[:3]}
 
     if visitor_uuid is not None and visitor_uuid not in list(visitor_top_counter.keys()):
-        if visitor_uuid in list(visitor_top_counter.keys()):
+        if visitor_uuid in list(visitor_counter.keys()):
             visitor_top_counter[visitor_uuid] = visitor_counter[visitor_uuid]
         else:
             visitor_top_counter[visitor_uuid] = 0
