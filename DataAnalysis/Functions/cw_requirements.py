@@ -209,6 +209,8 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
 
     doc_counter = {}
 
+    doc_visitor_mapping = {}
+
     visitors = doc_to_visitor(documents, doc_uuid)
 
     # print("\n\nVISITORS: ", visitors,"\n\n")
@@ -229,6 +231,8 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
             else:
                 doc_counter[document] = 1
 
+    # print(doc_counter)
+
     doc_counter = dict(sorted(doc_counter.items(), key=lambda item: item[1], reverse=True))
     doc_counter = {key: doc_counter[key] for key in list(doc_counter)[:7]}
     
@@ -244,16 +248,27 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
             else:
                 visitor_counter[visitor] += 1
 
-    visitor_counter = dict(sorted(visitor_counter.items(), key=lambda item: item[1], reverse=True))
-    visitor_counter = {key: visitor_counter[key] for key in list(visitor_counter)[:3]}
-
     visitor_top_counter = visitor_counter.copy()
+
+    visitor_top_counter = dict(sorted(visitor_top_counter.items(), key=lambda item: item[1], reverse=True))
+    visitor_top_counter = {key: visitor_top_counter[key] for key in list(visitor_top_counter)[:3]}
 
     if visitor_uuid is not None and visitor_uuid not in list(visitor_top_counter.keys()):
         if visitor_uuid in list(visitor_top_counter.keys()):
             visitor_top_counter[visitor_uuid] = visitor_counter[visitor_uuid]
         else:
             visitor_top_counter[visitor_uuid] = 0
+
+
+    for visitor in list(visitor_top_counter.keys()):
+
+        visited_documents = visitor_to_doc(documents, visitor)
+
+        for document in visited_documents:
+            if document not in list(doc_counter.keys()):
+                visited_documents.remove(document)
+
+        doc_visitor_mapping[visitor] = visited_documents
 
     # print("\n\nVISITOR COUNTER: ", visitor_counter,"\n\n")
 
@@ -305,7 +320,7 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
 
 
 
-    return doc_counter, visitor_top_counter
+    return doc_counter, visitor_top_counter, doc_visitor_mapping
 
 # def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
 #     # Dictionary to store the relationship between visitors and documents
