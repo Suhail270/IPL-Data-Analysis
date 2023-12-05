@@ -28,7 +28,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AvidReaderPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc):
 
             frame = F(container, self)
 
@@ -41,35 +41,16 @@ class DataVisualise(tk.Tk):
 
         self.show_frame(HomePage)
 
-        window_width = 700
-        window_height = 500
+        window_width = 500
+        window_height = 570
         window_x = (self.winfo_screenwidth() - window_width) // 2
-        window_y = (self.winfo_screenheight() - window_height) // 2
+        window_y = (self.winfo_screenheight() - window_height) // 4
         self.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
 
     def show_frame(self, cont):
 
         frame = self.frames[cont]
         frame.tkraise()
-
-# class FilePage(tk.Frame):
-
-#     def __init__(self, parent, controller):
-#         tk.Frame.__init__(self,parent)
-#         label = tk.Label(self, text="Enter the file path for the dataset", font=LARGE_FONT)
-#         label.pack(pady=10,padx=10)
-
-#         file_path_label = tk.Label(self, text="File Path:")
-#         file_path_label.pack(pady=5)
-#         self.file_path_entry = tk.Entry(self, width=50)
-#         self.file_path_entry.pack(pady=10)
-
-#         button2 = tk.Button(self, text="Next ->",
-#                             command=lambda: controller.show_frame(HomePage))
-#         button2.pack(pady=10)
-
-#         def get_file_path(self):
-#             return self.file_path_entry.get()
         
 class HomePage(tk.Frame):
 
@@ -94,6 +75,10 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(FormatBrowserPlot))
         button3.pack(pady=10)
 
+        button9 = tk.Button(self, text="4 - Avid Readers",
+                            command=lambda: controller.show_frame(AvidReaderPlot))
+        button9.pack(pady=10)
+
         button5 = tk.Button(self, text="5 & 6 - Also Likes Graph",
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
@@ -111,7 +96,7 @@ class HomePage(tk.Frame):
         button8.pack(pady=10)
 
 
-        button6 = tk.Button(self, text="Logged In Users [ADDITIONAL 4]",
+        button6 = tk.Button(self, text="Logged In vs Non-Logged In [ADDITIONAL 4]",
                             command=lambda: controller.show_frame(LogInView))
         button6.pack(pady=10)
 
@@ -282,6 +267,36 @@ class FormatBrowserPlot(tk.Frame):
         documents, visitors, json_data = read_file(file_path)
         browser_count = view_broswer(json_data)
         format_browser_pie(browser_count)
+
+class AvidReaderPlot(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="The top 10 avide reader's of a document", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        doc_uuid_label = tk.Label(self, text="Document UUID:")
+        doc_uuid_label.pack(pady=5)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_avid_reader(self.doc_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10)
+
+    def plot_avid_reader(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+        avid_reader_bar(visitors)
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.doc_uuid_entry.delete(0, tk.END)
+
 
 class AlsoLikes(tk.Frame):
 
