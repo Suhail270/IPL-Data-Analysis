@@ -343,8 +343,8 @@ class AlsoLikes(tk.Frame):
         dropdown_menu = ttk.Combobox(self, textvariable=self.dropdown_var, values=["None", "Ascending", "Descending"])
         dropdown_menu.pack(pady=10)
 
-        # self.result_label = tk.Label(self, text="", font=("Helvetica", 6))
-        # self.result_label.pack(pady=10)
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 8))
+        self.result_label.pack(pady=10)
 
         buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get(), self.dropdown_var.get()))
         buttonplot.pack(pady=10)
@@ -356,31 +356,31 @@ class AlsoLikes(tk.Frame):
     def plot_also_likes(self, doc_uuid, vis_uuid=None, sort_func=None):
         documents, visitors, json_data = read_file(file_path)
 
-        # if sort_func == "Descending" or sort_func == "None":
-        #     documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
-        # else:
-        #     documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
+        if sort_func == "Descending" or sort_func == "None":
+            documents, visitors, mapping = also_likes(documents, doc_uuid, vis_uuid, sorting_func=True)
+        else:
+            documents, visitors, mapping = also_likes(documents, doc_uuid, vis_uuid, sorting_func=False)
 
-        # result_text = "\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid)
-        # for i in documents:
-        #     if documents[i]>1:
-        #         ending = "s."
-        #     else:
-        #         ending = "."
+        result_text = "\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid)
+        for i in documents:
+            if documents[i]>1:
+                ending = "s."
+            else:
+                ending = "."
 
-        #     result_text += "{document}: Read by {count} other reader{suffix}".format(document=i, count=documents[i], suffix=ending)
+            result_text += "{document}: Read by {count} other reader{suffix}\n".format(document=i, count=documents[i], suffix=ending)
         
-        # result_text += "\n\nVisitors:\n"
+        result_text += "\n\nVisitors:\n"
 
-        # for i in visitors:
-        #     if len(mapping[i]) > 0:
-        #         result_text += "Visitor", i, "read", visitors[i], "other documents including", mapping[i][0] + "."
-        #     else:
-        #         result_text += "Visitor", i, "has not read any associated documents."
-        # result_text += ""
+        for i in visitors:
+            if len(mapping[i]) > 0:
+                result_text += "Visitor {} read {} other documents including {}.\n".format(i, visitors[i], mapping[i][0])
+            else:
+                result_text += "Visitor {} has not read any associated documents.\n".format(i)
+        result_text += ""
 
-        # # Update the label with the result
-        # self.result_label.config(text=result_text)
+        # Update the label with the result
+        self.result_label.config(text=result_text)
         
         if vis_uuid is None or vis_uuid == '':
             if sort_func == "None":
