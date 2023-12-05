@@ -217,7 +217,8 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
     # Build a mapping between visitors and the documents they have visited
     for visitor in visitors:
         if visitor not in visitor_doc_relationship:
-            visitor_doc_relationship[visitor] = visitor_to_doc(documents, visitor)
+            if doc_uuid in visitor_to_doc(documents, visitor):
+                visitor_doc_relationship[visitor] = visitor_to_doc(documents, visitor)
 
     # Count the number of readers for each document
     for visitor in visitor_doc_relationship:
@@ -238,9 +239,9 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
         document_visitors = doc_to_visitor(documents, document)
         for visitor in document_visitors:
             # Increment the count for the visitor
-            if visitor not in visitor_counter:
+            if visitor not in visitor_counter and doc_uuid in visitor_to_doc(documents, visitor):
                 visitor_counter[visitor] = 1
-            else:
+            elif visitor in visitor_counter and doc_uuid in visitor_to_doc(documents, visitor):
                 visitor_counter[visitor] += 1
 
     # Create a copy of visitor_counter for further processing
