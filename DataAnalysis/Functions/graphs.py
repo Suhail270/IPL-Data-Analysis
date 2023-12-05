@@ -375,14 +375,14 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
     #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
     
-    if visitor_uuid is None and sorting_func == 1:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = 1)
+    if visitor_uuid is None and sorting_func == False:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = False)
     elif visitor_uuid is None and sorting_func is None:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func=2)
-    elif visitor_uuid is not None and sorting_func == 1:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=1)
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = True)
+    elif visitor_uuid is not None and sorting_func == False:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=False)
     else:
-        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=2)
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=True)
 
     if visitor_uuid is not None:
          graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#60d394')
