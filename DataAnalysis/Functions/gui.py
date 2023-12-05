@@ -28,7 +28,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AvidReaderPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AvidReaderPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc, LogInAuthenticate):
 
             frame = F(container, self)
 
@@ -95,10 +95,13 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(UserLoc))
         button8.pack(pady=10)
 
-
         button6 = tk.Button(self, text="Logged In vs Non-Logged In [ADDITIONAL 4]",
                             command=lambda: controller.show_frame(LogInView))
         button6.pack(pady=10)
+
+        button10 = tk.Button(self, text="Check User Logged In? [ADDITIONAL 5]",
+                            command=lambda: controller.show_frame(LogInAuthenticate))
+        button10.pack(pady=10)
 
 
 
@@ -447,7 +450,7 @@ class DocOverview(tk.Frame):
         # Show the home page
         controller.show_frame(HomePage)
         # Clear the text box
-        self.vis_uuid_entry.delete(0, tk.END) 
+        self.doc_uuid_entry.delete(0, tk.END) 
 
     def plot_doc_time(self, doc_uuid):
         documents, visitors, json_data = read_file(file_path)
@@ -455,6 +458,28 @@ class DocOverview(tk.Frame):
             doc_overview_graph(documents)
         else:
             doc_overview_graph(documents, doc_uuid)
+
+class LogInAuthenticate(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Check is the visitor is logged in or not", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        vis_uuid_label = tk.Label(self, text="Visitor UUID:")
+        vis_uuid_label.pack(pady=5)
+        self.vis_uuid_entry = tk.Entry(self, width=50)
+        self.vis_uuid_entry.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10) 
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.vis_uuid_entry.delete(0, tk.END) 
 
 def get_file_path():
     file_path = filedialog.askopenfilename(title="Select a JSON file", filetypes=[("JSON files", "*.json")])
