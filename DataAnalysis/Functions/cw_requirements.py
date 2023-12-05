@@ -210,7 +210,6 @@ def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
     doc_counter = {}
     # Dictionary to store the mapping between visitors and the documents they have read
     doc_visitor_mapping = {}
-
     # Get the list of visitors for the specified document UUID
     visitors = doc_to_visitor(documents, doc_uuid)
 
