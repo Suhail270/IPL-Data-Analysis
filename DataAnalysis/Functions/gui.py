@@ -276,13 +276,16 @@ class AvidReaderPlot(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="The top 10 avide reader's of a document", font=LARGE_FONT)
+        label = tk.Label(self, text="The top 10 avid reader's of a document", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
         doc_uuid_label = tk.Label(self, text="Document UUID:")
         doc_uuid_label.pack(pady=5)
         self.doc_uuid_entry = tk.Entry(self, width=50)
         self.doc_uuid_entry.pack(pady=10)
+
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 8))
+        self.result_label.pack(pady=10)
 
         buttonplot = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_avid_reader(self.doc_uuid_entry.get()))
         buttonplot.pack(pady=10)
@@ -293,6 +296,14 @@ class AvidReaderPlot(tk.Frame):
 
     def plot_avid_reader(self, doc_uuid):
         documents, visitors, json_data = read_file(file_path)
+
+        top_10, values = avid_readers(visitors)
+        result_text = "Top 10 avid readers:\n"
+        for i in range(len(top_10)):
+            result_text += "Reader {num}'s UUID: {uuid}\nReading Time - {time}\n".format(num=i+1, uuid=top_10[i], time=values[i])
+
+        self.result_label.config(text=result_text)
+
         avid_reader_bar(visitors)
 
     def back_to_home(self, controller):
@@ -300,6 +311,8 @@ class AvidReaderPlot(tk.Frame):
         controller.show_frame(HomePage)
         # Clear the text box
         self.doc_uuid_entry.delete(0, tk.END)
+        self.result_text = ""
+        self.result_label.config(text=self.result_text)
 
 
 class AlsoLikes(tk.Frame):
