@@ -78,40 +78,40 @@ class HomePage(tk.Frame):
         label = tk.Label(self, text="What would you like to visualize?", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
-        button = tk.Button(self, text="Countries Plots",
+        button = tk.Button(self, text="2a - Countries Plots",
                             command=lambda: controller.show_frame(CountryPlot))
         button.pack(pady=10)
 
-        button2 = tk.Button(self, text="Continent Plots",
+        button2 = tk.Button(self, text="2b - Continent Plots",
                             command=lambda: controller.show_frame(ContinentPlot))
         button2.pack(pady=10)
 
-        button4 = tk.Button(self, text="Browser Plots",
+        button4 = tk.Button(self, text="3a - Browser Plots",
                             command=lambda: controller.show_frame(BrowserPlot))
         button4.pack(pady=10)
 
-        button3 = tk.Button(self, text="Formatted Browser Plots",
+        button3 = tk.Button(self, text="3b - Formatted Browser Plots",
                             command=lambda: controller.show_frame(FormatBrowserPlot))
         button3.pack(pady=10)
 
-        button5 = tk.Button(self, text="Also Likes Graph",
+        button5 = tk.Button(self, text="5 & 6 - Also Likes Graph",
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
 
-        button7 = tk.Button(self, text="Document Overview",
+        button7 = tk.Button(self, text="Document Overview [ADDITIONAL 1]",
                             command=lambda: controller.show_frame(DocOverview))
         button7.pack(pady=10)
 
-        button5 = tk.Button(self, text="Visitor Overview",
+        button5 = tk.Button(self, text="Visitor Overview [ADDITIONAL 2]",
                             command=lambda: controller.show_frame(VisitorOverview))
         button5.pack(pady=10)
 
-        button8 = tk.Button(self, text="User Location",
+        button8 = tk.Button(self, text="User Location [ADDITIONAL 3]",
                             command=lambda: controller.show_frame(UserLoc))
         button8.pack(pady=10)
 
 
-        button6 = tk.Button(self, text="Logged In Users",
+        button6 = tk.Button(self, text="Logged In Users [ADDITIONAL 4]",
                             command=lambda: controller.show_frame(LogInView))
         button6.pack(pady=10)
 
