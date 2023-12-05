@@ -197,7 +197,7 @@ def browser_bar(browser_count):
     plt.xlabel('Browser')
     plt.xticks(rotation=90)
     plt.ylabel('Number of Occurrences')
-    plt.title('Browser Histogram')
+    plt.title('Browser Bar Graph')
     # plt.tight_layout()
 
     # Show the plot
@@ -251,7 +251,7 @@ def format_browser_bar(browser_count):
     plt.xticks(rotation=90)
     plt.ylabel('Number of Occurrences')
     plt.subplots_adjust(bottom=0.483)
-    plt.title('Formatted Browser Histogram')
+    plt.title('Formatted Browser Bar Graph')
     # plt.tight_layout()
 
     # Show the plot
@@ -275,7 +275,7 @@ def format_browser_pie(browser_count):
     plt.pie(count, labels=formated_browser, autopct='%1.1f%%', startangle=90,textprops={'rotation': 45})
     plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-    plt.title('Country Pie Chart', x=0.05)
+    plt.title('Formatted Browser Pie Chart', x=0.05)
 
     # Show the plot
     barFormatBrowser = plt.show()
@@ -367,32 +367,49 @@ def logged_in_graph(visitors):
     return log_in_graph
 
 
-def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
+def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
 
     graph = graphviz.Digraph()
 
     # if visitor_uuid is not None:
     #     graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
 
-    also_like_func = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func=2)
+    
+    if visitor_uuid is None and sorting_func == False:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = False)
+    elif visitor_uuid is None and sorting_func is None:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func = True)
+    elif visitor_uuid is not None and sorting_func == False:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=False)
+    else:
+        documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=True)
 
-    count = 0
+    with graph.subgraph() as visitor_subgraph:
+        visitor_subgraph.attr(rank='same')
+        if visitor_uuid is not None:
+            visitor_subgraph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#60d394')
 
-    for doc in also_like_func:
-        if count == 10:
-            break
-        readers = list(also_like_func[doc].keys())
-        if doc == doc_uuid:
-            graph.node(doc, label=doc[-4:], shape='box', style='filled', color='#d0f4de')
-        else:
-            graph.node(doc, label=doc[-4:], shape='box')
-        for reader in readers:
-            if visitor_uuid is not None and visitor_uuid == reader:
-                graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
-            graph.node(reader, label=reader[-4:])
-            graph.edge(reader, doc)
+        for visitor in visitors:
+            if visitor_uuid is not None and visitor == visitor_uuid:
+                visitor_subgraph.node(visitor, label=visitor[-4:], style='filled', color='#60d394')
+            else:
+                visitor_subgraph.node(visitor, label=visitor[-4:])
 
-        count += 1
+            with graph.subgraph() as doc_subgraph:
+                doc_subgraph.attr(rank='same') 
+
+                for doc in documents:
+                    if doc == doc_uuid:
+                        doc_subgraph.node('doc', label=doc[-4:], shape='box', style='filled', color='#60d394')
+                        # graph.edge(visitor, 'doc')
+                        if doc in mapping[visitor]:
+                            graph.edge(visitor, 'doc')
+                    else:
+                        doc_subgraph.node(doc, label=doc[-4:], shape='box')
+                        if doc in mapping[visitor]:
+                            graph.edge(visitor, doc)
+           
+
 
     dot_file_path = './also_likes_graph.dot'
     graph.render(dot_file_path, view=True)
@@ -421,5 +438,23 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
     #             graph.edge(visitor, doc)
 
     
+# ===================================================
 
+# count = 0
+
+#     for doc in also_like_func:
+#         if count == 10:
+#             break
+#         readers = list(also_like_func[doc].keys())
+#         if doc == doc_uuid:
+#             graph.node(doc, label=doc[-4:], shape='box', style='filled', color='#d0f4de')
+#         else:
+#             graph.node(doc, label=doc[-4:], shape='box')
+#         for reader in readers:
+#             if visitor_uuid is not None and visitor_uuid == reader:
+#                 graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#d0f4de')
+#             graph.node(reader, label=reader[-4:])
+#             graph.edge(reader, doc)
+
+#         count += 1
 

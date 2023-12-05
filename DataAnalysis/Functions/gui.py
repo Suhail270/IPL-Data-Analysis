@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
 from .graphs import *
+from tkinter import filedialog
+from tkinter import ttk 
 
 '''
 GUI for the program 
@@ -76,40 +78,40 @@ class HomePage(tk.Frame):
         label = tk.Label(self, text="What would you like to visualize?", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
-        button = tk.Button(self, text="Countries Plots",
+        button = tk.Button(self, text="2a - Countries Plots",
                             command=lambda: controller.show_frame(CountryPlot))
         button.pack(pady=10)
 
-        button2 = tk.Button(self, text="Continent Plots",
+        button2 = tk.Button(self, text="2b - Continent Plots",
                             command=lambda: controller.show_frame(ContinentPlot))
         button2.pack(pady=10)
 
-        button4 = tk.Button(self, text="Browser Plots",
+        button4 = tk.Button(self, text="3a - Browser Plots",
                             command=lambda: controller.show_frame(BrowserPlot))
         button4.pack(pady=10)
 
-        button3 = tk.Button(self, text="Formatted Browser Plots",
+        button3 = tk.Button(self, text="3b - Formatted Browser Plots",
                             command=lambda: controller.show_frame(FormatBrowserPlot))
         button3.pack(pady=10)
 
-        button5 = tk.Button(self, text="Also Likes Graph",
+        button5 = tk.Button(self, text="5 & 6 - Also Likes Graph",
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
 
-        button7 = tk.Button(self, text="Document Overview",
+        button7 = tk.Button(self, text="Document Overview [ADDITIONAL 1]",
                             command=lambda: controller.show_frame(DocOverview))
         button7.pack(pady=10)
 
-        button5 = tk.Button(self, text="Visitor Overview",
+        button5 = tk.Button(self, text="Visitor Overview [ADDITIONAL 2]",
                             command=lambda: controller.show_frame(VisitorOverview))
         button5.pack(pady=10)
 
-        button8 = tk.Button(self, text="User Location",
+        button8 = tk.Button(self, text="User Location [ADDITIONAL 3]",
                             command=lambda: controller.show_frame(UserLoc))
         button8.pack(pady=10)
 
 
-        button6 = tk.Button(self, text="Logged In Users",
+        button6 = tk.Button(self, text="Logged In Users [ADDITIONAL 4]",
                             command=lambda: controller.show_frame(LogInView))
         button6.pack(pady=10)
 
@@ -298,20 +300,42 @@ class AlsoLikes(tk.Frame):
         self.vis_uuid_entry = tk.Entry(self, width=50)
         self.vis_uuid_entry.pack(pady=10)
 
-        buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get()))
+        # Create a StringVar to store the selected option
+        self.dropdown_var = tk.StringVar(self)
+        self.dropdown_var.set("None")  # Set the default value to None
+
+        # Create a label and dropdown menu
+        label = tk.Label(self, text="Sort Order: (Optional)")
+        label.pack(pady=10)
+
+        dropdown_menu = ttk.Combobox(self, textvariable=self.dropdown_var, values=["None", "Ascending", "Descending"])
+        dropdown_menu.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get(), self.dropdown_var.get()))
         buttonplot.pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
 
-    def plot_also_likes(self, doc_uuid, vis_uuid=None):
+    def plot_also_likes(self, doc_uuid, vis_uuid=None, sort_func=None):
         documents, visitors, json_data = read_file(file_path)
 
         if vis_uuid is None or vis_uuid == '':
-            also_likes_graph(documents, doc_uuid)
+            if sort_func == "None":
+                also_likes_graph(documents, doc_uuid)
+            elif sort_func == "Ascending":
+                also_likes_graph(documents, doc_uuid, sorting_func=False)
+            else:
+                also_likes_graph(documents, doc_uuid, sorting_func=True)
         else:
-            also_likes_graph(documents, doc_uuid, vis_uuid)
+            if sort_func == "None":
+                also_likes_graph(documents, doc_uuid, vis_uuid)
+            elif sort_func == "Ascending":
+                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
+            else:
+                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
+            
 
     def back_to_home(self, controller):
         # Show the home page
@@ -416,10 +440,22 @@ class DocOverview(tk.Frame):
             doc_overview_graph(documents)
         else:
             doc_overview_graph(documents, doc_uuid)
+
+def get_file_path():
+    file_path = filedialog.askopenfilename(title="Select a JSON file", filetypes=[("JSON files", "*.json")])
+    return file_path
         
 def startGUI():
-    app = DataVisualise()
-    global file_path
-    file_path = 'Dataset/sample_3m_lines.json'
+    root = tk.Tk()
+    root.withdraw()  # Hide the main Tkinter window
 
+    global file_path
+    file_path = get_file_path()
+    
+    if not file_path:
+        # User canceled the file selection
+        return
+
+    app = DataVisualise()
     app.mainloop()
+
