@@ -4,6 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
 from .graphs import *
 from tkinter import filedialog
+from tkinter import ttk 
 
 '''
 GUI for the program 
@@ -299,20 +300,42 @@ class AlsoLikes(tk.Frame):
         self.vis_uuid_entry = tk.Entry(self, width=50)
         self.vis_uuid_entry.pack(pady=10)
 
-        buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get()))
+        # Create a StringVar to store the selected option
+        self.dropdown_var = tk.StringVar(self)
+        self.dropdown_var.set("None")  # Set the default value to None
+
+        # Create a label and dropdown menu
+        label = tk.Label(self, text="Sort Order: (Optional)")
+        label.pack(pady=10)
+
+        dropdown_menu = ttk.Combobox(self, textvariable=self.dropdown_var, values=["None", "Ascending", "Descending"])
+        dropdown_menu.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get(), self.dropdown_var.get()))
         buttonplot.pack(pady=10)
 
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10)
 
-    def plot_also_likes(self, doc_uuid, vis_uuid=None):
+    def plot_also_likes(self, doc_uuid, vis_uuid=None, sort_func=None):
         documents, visitors, json_data = read_file(file_path)
 
         if vis_uuid is None or vis_uuid == '':
-            also_likes_graph(documents, doc_uuid)
+            if sort_func == "None":
+                also_likes_graph(documents, doc_uuid)
+            elif sort_func == "Ascending":
+                also_likes_graph(documents, doc_uuid, sorting_func=1)
+            else:
+                also_likes_graph(documents, doc_uuid, sorting_func=2)
         else:
-            also_likes_graph(documents, doc_uuid, vis_uuid)
+            if sort_func == "None":
+                also_likes_graph(documents, doc_uuid, vis_uuid)
+            elif sort_func == "Ascending":
+                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=1)
+            else:
+                also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=2)
+            
 
     def back_to_home(self, controller):
         # Show the home page
