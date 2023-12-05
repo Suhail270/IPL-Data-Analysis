@@ -299,21 +299,15 @@ class AvidReaderPlot(tk.Frame):
     # Initialize the frame
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="The top 10 avid reader's of a document", font=LARGE_FONT)
+        label = tk.Label(self, text="The top 10 avid readers of a document", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
-        # Create labels and entry for user input
-        doc_uuid_label = tk.Label(self, text="Document UUID:")
-        doc_uuid_label.pack(pady=5)
-        self.doc_uuid_entry = tk.Entry(self, width=50)
-        self.doc_uuid_entry.pack(pady=10)
-
         # Label to display result
-        self.result_label = tk.Label(self, text="", font=("Helvetica", 10))
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 11))
         self.result_label.pack(pady=10)
 
         # Create a button to plot avid reader bar graph
-        buttonplot = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_avid_reader(self.doc_uuid_entry.get()))
+        buttonplot = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_avid_reader())
         buttonplot.pack(pady=10)
 
         # Create a button to go back to the home page
@@ -321,7 +315,7 @@ class AvidReaderPlot(tk.Frame):
         button1.pack(pady=10)
 
     # Function to plot avid reader bar graph and display the top 10 avid readers
-    def plot_avid_reader(self, doc_uuid):
+    def plot_avid_reader(self):
         documents, visitors, json_data = read_file(file_path)
 
         # Get the top 10 avid readers and their reading times
@@ -341,9 +335,6 @@ class AvidReaderPlot(tk.Frame):
     def back_to_home(self, controller):
         # Show the home page
         controller.show_frame(HomePage)
-        
-        # Clear the text box
-        self.doc_uuid_entry.delete(0, tk.END)
         
         # Reset the result text and update the label
         self.result_text = ""
