@@ -155,9 +155,9 @@ Enter Option (1 or 2): ''')
 Enter Option (1 or 2): ''')
 
         if visitor_input == '''1''':                 
-            documents, visitors, mapping = also_likes(documents, doc_uuid, visitor_uuid=visitor_uuid)
+            documents, visitors, mapping = also_likes(documents, doc_uuid, visitor_uuid=visitor_uuid, sorting_func=True)
         else:
-            documents, visitors, mapping = also_likes(documents, doc_uuid)
+            documents, visitors, mapping = also_likes(documents, doc_uuid, sorting_func=True)
             
         print("\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
 

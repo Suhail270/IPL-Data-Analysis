@@ -1,4 +1,4 @@
-matplotlib==3.7.2
 pycountry_convert==0.7.2
 pytest==6.2.5
+graphviz==9.0.0
 ua_parser==0.18.0

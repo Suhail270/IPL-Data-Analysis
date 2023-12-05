@@ -116,7 +116,12 @@ def testAlsoLikes():
    
       file_path = 'DataAnalysis/Dataset/sample_small.json'
       doc_uuid = '130323125939-5f4318404cda4025a2463c66435ad7c8'
+
+      file_path = 'DataAnalysis/Dataset/sample_small.json'
+
       documents, _, _ = read_file(file_path)
 
-      assert len(list(also_likes(documents, doc_uuid).keys())) > 1
+      al_documents, visitors, mapping = also_likes(documents, doc_uuid, sorting_func=True)
+
+      assert len(al_documents) > 1
 
