@@ -2,7 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
-from .additional import logged_in_visitors, non_logged_in_visitors
+from .additional import logged_in_visitors, non_logged_in_visitors, visitor_authenticated
 from .graphs import *
 from tkinter import filedialog
 from tkinter import ttk 
@@ -29,7 +29,7 @@ class DataVisualise(tk.Tk):
 
         self.frames = {}
 
-        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc):
+        for F in (HomePage, CountryPlot, ContinentPlot, BrowserPlot, FormatBrowserPlot, AvidReaderPlot, AlsoLikes, VisitorOverview, LogInView, DocOverview, UserLoc, LogInAuthenticate):
 
             frame = F(container, self)
 
@@ -42,35 +42,16 @@ class DataVisualise(tk.Tk):
 
         self.show_frame(HomePage)
 
-        window_width = 700
-        window_height = 500
+        window_width = 500
+        window_height = 570
         window_x = (self.winfo_screenwidth() - window_width) // 2
-        window_y = (self.winfo_screenheight() - window_height) // 2
+        window_y = (self.winfo_screenheight() - window_height) // 4
         self.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")
 
     def show_frame(self, cont):
 
         frame = self.frames[cont]
         frame.tkraise()
-
-# class FilePage(tk.Frame):
-
-#     def __init__(self, parent, controller):
-#         tk.Frame.__init__(self,parent)
-#         label = tk.Label(self, text="Enter the file path for the dataset", font=LARGE_FONT)
-#         label.pack(pady=10,padx=10)
-
-#         file_path_label = tk.Label(self, text="File Path:")
-#         file_path_label.pack(pady=5)
-#         self.file_path_entry = tk.Entry(self, width=50)
-#         self.file_path_entry.pack(pady=10)
-
-#         button2 = tk.Button(self, text="Next ->",
-#                             command=lambda: controller.show_frame(HomePage))
-#         button2.pack(pady=10)
-
-#         def get_file_path(self):
-#             return self.file_path_entry.get()
         
 class HomePage(tk.Frame):
 
@@ -95,6 +76,10 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(FormatBrowserPlot))
         button3.pack(pady=10)
 
+        button9 = tk.Button(self, text="4 - Avid Readers",
+                            command=lambda: controller.show_frame(AvidReaderPlot))
+        button9.pack(pady=10)
+
         button5 = tk.Button(self, text="5 & 6 - Also Likes Graph",
                             command=lambda: controller.show_frame(AlsoLikes))
         button5.pack(pady=10)
@@ -111,10 +96,13 @@ class HomePage(tk.Frame):
                             command=lambda: controller.show_frame(UserLoc))
         button8.pack(pady=10)
 
-
-        button6 = tk.Button(self, text="Logged In Users [ADDITIONAL 4]",
+        button6 = tk.Button(self, text="Logged In vs Non-Logged In [ADDITIONAL 4]",
                             command=lambda: controller.show_frame(LogInView))
         button6.pack(pady=10)
+
+        button10 = tk.Button(self, text="User Authentication [ADDITIONAL 5]",
+                            command=lambda: controller.show_frame(LogInAuthenticate))
+        button10.pack(pady=10)
 
 
 
@@ -284,6 +272,49 @@ class FormatBrowserPlot(tk.Frame):
         browser_count = view_broswer(json_data)
         format_browser_pie(browser_count)
 
+class AvidReaderPlot(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="The top 10 avid reader's of a document", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        doc_uuid_label = tk.Label(self, text="Document UUID:")
+        doc_uuid_label.pack(pady=5)
+        self.doc_uuid_entry = tk.Entry(self, width=50)
+        self.doc_uuid_entry.pack(pady=10)
+
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 8))
+        self.result_label.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Plot Bar Graph", command=lambda: self.plot_avid_reader(self.doc_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10)
+
+    def plot_avid_reader(self, doc_uuid):
+        documents, visitors, json_data = read_file(file_path)
+
+        top_10, values = avid_readers(visitors)
+        result_text = "Top 10 avid readers:\n"
+        for i in range(len(top_10)):
+            result_text += "Reader {num}'s UUID: {uuid}\nReading Time - {time}\n".format(num=i+1, uuid=top_10[i], time=values[i])
+
+        self.result_label.config(text=result_text)
+
+        avid_reader_bar(visitors)
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.doc_uuid_entry.delete(0, tk.END)
+        self.result_text = ""
+        self.result_label.config(text=self.result_text)
+
+
 class AlsoLikes(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -312,6 +343,9 @@ class AlsoLikes(tk.Frame):
         dropdown_menu = ttk.Combobox(self, textvariable=self.dropdown_var, values=["None", "Ascending", "Descending"])
         dropdown_menu.pack(pady=10)
 
+        # self.result_label = tk.Label(self, text="", font=("Helvetica", 6))
+        # self.result_label.pack(pady=10)
+
         buttonplot = tk.Button(self, text="Also Likes Graph", command=lambda: self.plot_also_likes(self.doc_uuid_entry.get(), self.vis_uuid_entry.get(), self.dropdown_var.get()))
         buttonplot.pack(pady=10)
 
@@ -322,6 +356,32 @@ class AlsoLikes(tk.Frame):
     def plot_also_likes(self, doc_uuid, vis_uuid=None, sort_func=None):
         documents, visitors, json_data = read_file(file_path)
 
+        # if sort_func == "Descending" or sort_func == "None":
+        #     documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=True)
+        # else:
+        #     documents, visitors, mapping = also_likes_graph(documents, doc_uuid, vis_uuid, sorting_func=False)
+
+        # result_text = "\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid)
+        # for i in documents:
+        #     if documents[i]>1:
+        #         ending = "s."
+        #     else:
+        #         ending = "."
+
+        #     result_text += "{document}: Read by {count} other reader{suffix}".format(document=i, count=documents[i], suffix=ending)
+        
+        # result_text += "\n\nVisitors:\n"
+
+        # for i in visitors:
+        #     if len(mapping[i]) > 0:
+        #         result_text += "Visitor", i, "read", visitors[i], "other documents including", mapping[i][0] + "."
+        #     else:
+        #         result_text += "Visitor", i, "has not read any associated documents."
+        # result_text += ""
+
+        # # Update the label with the result
+        # self.result_label.config(text=result_text)
+        
         if vis_uuid is None or vis_uuid == '':
             if sort_func == "None":
                 also_likes_graph(documents, doc_uuid)
@@ -344,6 +404,9 @@ class AlsoLikes(tk.Frame):
         # Clear the text box
         self.doc_uuid_entry.delete(0, tk.END)
         self.vis_uuid_entry.delete(0, tk.END)
+        # Clear the text box
+        self.result_text = ""
+        self.result_label.config(text=self.result_text)
 
 class VisitorOverview(tk.Frame):
 
@@ -466,7 +529,7 @@ class DocOverview(tk.Frame):
         # Show the home page
         controller.show_frame(HomePage)
         # Clear the text box
-        self.vis_uuid_entry.delete(0, tk.END) 
+        self.doc_uuid_entry.delete(0, tk.END) 
 
     def plot_doc_time(self, doc_uuid):
         documents, visitors, json_data = read_file(file_path)
@@ -474,6 +537,53 @@ class DocOverview(tk.Frame):
             doc_overview_graph(documents)
         else:
             doc_overview_graph(documents, doc_uuid)
+
+class LogInAuthenticate(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Check is the visitor is logged in or not", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        vis_uuid_label = tk.Label(self, text="Visitor UUID:")
+        vis_uuid_label.pack(pady=5)
+        self.vis_uuid_entry = tk.Entry(self, width=50)
+        self.vis_uuid_entry.pack(pady=10)
+
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 12))
+        self.result_label.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Check Visitor", command=lambda: self.user_check(self.vis_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: self.back_to_home(controller))
+        button1.pack(pady=10) 
+
+    def user_check(self, visitor_uuid):
+        documents, visitors, json_data = read_file(file_path)
+
+        result = visitor_authenticated(visitor_uuid, visitors)
+
+        result_text = "\nVisitor UUID: {uuid}\n".format(uuid=visitor_uuid)
+
+        if result is not False:
+            result_text += "The visitor is logged in.\nUsername: " + result + "\n"
+        
+        else:
+            result_text += "The visitor is not logged in.\n"
+
+        # Update the label with the result
+        self.result_label.config(text=result_text)
+
+    def back_to_home(self, controller):
+        # Show the home page
+        controller.show_frame(HomePage)
+        # Clear the text box
+        self.vis_uuid_entry.delete(0, tk.END) 
+        # Clear the text box
+        self.result_text = ""
+        self.result_label.config(text=self.result_text)
 
 def get_file_path():
     file_path = filedialog.askopenfilename(title="Select a JSON file", filetypes=[("JSON files", "*.json")])

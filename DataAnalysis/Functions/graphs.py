@@ -282,6 +282,30 @@ def format_browser_pie(browser_count):
 
     return barFormatBrowser
 
+'''
+Plots a bar graph for the top 10 avid readers and their time spent reading the document
+'''
+
+def avid_reader_bar(visitors):
+
+    # Extract the browsers and their counts 
+    reader, count = avid_readers(visitors)
+
+    # Plot the graph
+    plt.bar(reader, count, color='#F8C8DC')
+
+    plt.xlabel('Reader')
+    plt.xticks(rotation=90)
+    plt.ylabel('Time Spent')
+    plt.subplots_adjust(bottom=0.483)
+    plt.title('Avid Readers Bar Graph')
+    # plt.tight_layout()
+
+    # Show the plot
+    barAvidReader = plt.show()
+
+    return barAvidReader
+
 def doc_overview_graph(documents, doc_uuid=None):
 
     if doc_uuid is not None:
