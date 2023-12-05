@@ -376,12 +376,15 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None):
 
     documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid=None, sorting_func=2)
 
+    if visitor_uuid is not None:
+         graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#60d394')
+
     for visitor in visitors:
         if visitor_uuid is not None and visitor_uuid == visitor:
             graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#60d394')
         else:
             graph.node(visitor, label=visitor[-4:])
-        
+
         for doc in mapping[visitor]:
             if doc == doc_uuid:
                 graph.node('doc', label=doc[-4:], shape='box', style='filled', color='#60d394')
