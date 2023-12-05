@@ -384,25 +384,30 @@ def also_likes_graph(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
     else:
         documents, visitors, mapping = also_likes(documents, doc_uuid,visitor_uuid, sorting_func=True)
 
-    if visitor_uuid is not None:
-         graph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#60d394')
+    with graph.subgraph() as visitor_subgraph:
+        visitor_subgraph.attr(rank='same')
+        if visitor_uuid is not None:
+            visitor_subgraph.node(visitor_uuid, label=visitor_uuid[-4:], style='filled', color='#60d394')
 
-    for visitor in visitors:
-        if visitor_uuid is not None and visitor == visitor_uuid:
-            graph.node(visitor, label=visitor[-4:], style='filled', color='#60d394')
-        else:
-            graph.node(visitor, label=visitor[-4:])
-
-        for doc in documents:
-            if doc == doc_uuid:
-                graph.node('doc', label=doc[-4:], shape='box', style='filled', color='#60d394')
-                # graph.edge(visitor, 'doc')
-                if doc in mapping[visitor]:
-                    graph.edge(visitor, 'doc')
+        for visitor in visitors:
+            if visitor_uuid is not None and visitor == visitor_uuid:
+                visitor_subgraph.node(visitor, label=visitor[-4:], style='filled', color='#60d394')
             else:
-                graph.node(doc, label=doc[-4:], shape='box')
-                if doc in mapping[visitor]:
-                    graph.edge(visitor, doc)
+                visitor_subgraph.node(visitor, label=visitor[-4:])
+
+            with graph.subgraph() as doc_subgraph:
+                doc_subgraph.attr(rank='same') 
+
+                for doc in documents:
+                    if doc == doc_uuid:
+                        doc_subgraph.node('doc', label=doc[-4:], shape='box', style='filled', color='#60d394')
+                        # graph.edge(visitor, 'doc')
+                        if doc in mapping[visitor]:
+                            graph.edge(visitor, 'doc')
+                    else:
+                        doc_subgraph.node(doc, label=doc[-4:], shape='box')
+                        if doc in mapping[visitor]:
+                            graph.edge(visitor, doc)
            
 
 
