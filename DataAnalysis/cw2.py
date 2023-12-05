@@ -159,10 +159,6 @@ Enter Option (1 or 2): ''')
         else:
             documents, visitors, mapping = also_likes(documents, doc_uuid)
             
-        # 100713205147-2ee05a98f1794324952eea5ca678c026 
-        # also_like_func = also_likes(documents, doc_uuid)
-
-        # print("Document UUID: {uuid}".format(uuid=doc_uuid))
         print("\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
 
         for i in documents:
@@ -183,26 +179,28 @@ Enter Option (1 or 2): ''')
                 print("Visitor", i, "has not read any associated documents.")
         print()
 
-        # count = 0
-
-        # for i in also_like_func:
-        #     if count == 7:
-        #         break
-        #     print(i, also_like_func[i])
-        #     # print("{document} - Read by {num} other readers".format(document=i, num=sum(list(also_like_func[i].values()))))
-        #     # print("Other readers include: {readers}\n".format(readers=list(also_like_func[i].keys())))
-        #     count+=1
-        
-        # count = 0
-
-        # print("Most Common Visitors:\n")
-        # for i in most_common_visitors:
-        #     if count == 7:
-        #         break
-        #     print(i, most_common_visitors[i])
-        #     count+=1
     
     elif args.task_id == "5d":
+
+        visitor_input = input('''\nWould you like to use the visitor UUID you entered into the terminal as a parameter?
+                              
+1. Yes
+2. No
+                              
+Enter Option (1 or 2): ''')
+        
+        while visitor_input not in ['''1''', '''2''']:
+            print("\nInvalid input. Please try again.\n")
+            visitor_input = input('''Would you like to use the visitor UUID you entered into the terminal as a parameter?
+1. Yes
+2. No
+                              
+Enter Option (1 or 2): ''')
+
+        if visitor_input == '''1''':                 
+            visitor_id = visitor_uuid
+        else:
+            visitor_id = None
 
         sort_func = input('''\nWhat sorting function would you like to use?
                             
@@ -222,23 +220,31 @@ Enter Option (1 or 2): ''')
 Enter Option (1 or 2): ''')
             
         if sort_func == "1":
-            sorting_text = "Ascending Order"
+            sort = False
 
         elif sort_func == "2":        
-            sorting_text = "Descending Order"
+            sort = True
 
-        also_like_func = also_likes(documents, doc_uuid, None, sort_func)
-        print("Document UUID: {uuid}".format(uuid=doc_uuid))
-        print("Readers of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
+        documents, visitors, mapping = also_likes(documents, doc_uuid, visitor_id, sort)
+        print("\nReaders of Document UUID: {uuid} have also read:\n".format(uuid=doc_uuid))
 
-        count = 0
+        for i in documents:
+            if documents[i]>1:
+                ending = "s."
+            else:
+                ending = "."
+            
+            print("{document}: Read by {count} other reader{suffix}".format(document=i, count=documents[i], suffix=ending))
 
-        for i in also_like_func:
-            if count == 7:
-                break
-            print("{document} - Read by {num} other readers".format(document=i, num=sum(list(also_like_func[i].values()))))
-            print("Other readers include: {readers}\n".format(readers=list(also_like_func[i].keys())))
-            count+=1
+
+        print("\n\nVisitors:\n")
+
+        for i in visitors:
+            if len(mapping[i]) > 0:
+                print("Visitor", i, "read", visitors[i], "other documents including", mapping[i][0] + ".")
+            else:
+                print("Visitor", i, "has not read any associated documents.")
+        print()
     
     elif args.task_id == "6a":
         result = most_popular_time_documents(documents)

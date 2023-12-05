@@ -202,169 +202,75 @@ sorted by the sorting function parameter.
 '''
 
 def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
+    # Dictionary to store the relationship between visitors and documents
     visitor_doc_relationship = {}
-    # Dictionary to store the count of readers for each document
-    doc_reader_count = {}
-    most_common_visitors = {}
-
+    # Counter to store the occurrences of each visitor
+    visitor_counter = {}
+    # Counter to store the occurrences of each document
     doc_counter = {}
-
+    # Dictionary to store the mapping between visitors and the documents they have read
     doc_visitor_mapping = {}
 
+    # Get the list of visitors for the specified document UUID
     visitors = doc_to_visitor(documents, doc_uuid)
 
-    # print("\n\nVISITORS: ", visitors,"\n\n")
-
+    # Build a mapping between visitors and the documents they have visited
     for visitor in visitors:
-        if visitor not in list(visitor_doc_relationship.keys()):
-            # print("\nVISITOR DOC: ",visitor, visitor_to_doc(documents, visitor),"\n\n")
+        if visitor not in visitor_doc_relationship:
             visitor_doc_relationship[visitor] = visitor_to_doc(documents, visitor)
-    
-    # print("VISITOR DOC DICT: ", visitor_doc_relationship,"\n\n")
 
-    # print("\n\nDOC READER COUNT: ", doc_reader_count,"\n\n")
-    
+    # Count the number of readers for each document
     for visitor in visitor_doc_relationship:
         for document in visitor_doc_relationship[visitor]:
+            # Increment the count for the document
             if document in doc_counter:
                 doc_counter[document] += 1
             else:
                 doc_counter[document] = 1
-
-    # print(doc_counter)
-
-    doc_counter = dict(sorted(doc_counter.items(), key=lambda item: item[1], reverse=True))
+    
+    # Sort the documents based on the specified sorting function
+    doc_counter = sortingfunc_test(doc_counter, sorting_func)
+    # Select the top 7 documents based on the sorting result
     doc_counter = {key: doc_counter[key] for key in list(doc_counter)[:7]}
-    
-    # print("\n\nDOC COUNTER: ", doc_counter,"\n\n")
 
-    visitor_counter = {}
-    
+    # Count the occurrences of each visitor for the top documents
     for document in doc_counter:
-        visitors = doc_to_visitor(documents, document)
-        for visitor in visitors:
+        document_visitors = doc_to_visitor(documents, document)
+        for visitor in document_visitors:
+            # Increment the count for the visitor
             if visitor not in visitor_counter:
                 visitor_counter[visitor] = 1
             else:
                 visitor_counter[visitor] += 1
 
+    # Create a copy of visitor_counter for further processing
     visitor_top_counter = visitor_counter.copy()
 
-    visitor_top_counter = dict(sorted(visitor_top_counter.items(), key=lambda item: item[1], reverse=True))
+    # Sort the visitors based on the specified sorting function
+    visitor_top_counter = sortingfunc_test(visitor_top_counter, sorting_func)
+    # Select the top 3 visitors based on the sorting result
     visitor_top_counter = {key: visitor_top_counter[key] for key in list(visitor_top_counter)[:3]}
 
-    if visitor_uuid is not None and visitor_uuid not in list(visitor_top_counter.keys()):
-        if visitor_uuid in list(visitor_counter.keys()):
+    # If a specific visitor UUID is provided and not in the top visitors, add it with its count
+    if visitor_uuid is not None and visitor_uuid not in visitor_top_counter:
+        if visitor_uuid in visitor_counter:
             visitor_top_counter[visitor_uuid] = visitor_counter[visitor_uuid]
         else:
             visitor_top_counter[visitor_uuid] = 0
 
-
-    for visitor in list(visitor_top_counter.keys()):
-
+    # Create a mapping between visitors and the documents they have read among the top documents
+    for visitor in visitor_top_counter:
         visited_documents = visitor_to_doc(documents, visitor)
 
-        for document in visited_documents:
-            if document not in list(doc_counter.keys()):
+        # Remove documents that are not among the top documents
+        for document in visited_documents.copy():
+            if document not in doc_counter:
                 visited_documents.remove(document)
 
+        # Store the mapping in doc_visitor_mapping
         doc_visitor_mapping[visitor] = visited_documents
 
-    # print("\n\nVISITOR COUNTER: ", visitor_counter,"\n\n")
-
-    #         # if document not in doc_reader_count:
-                
-    #         #     doc_visitors = doc_to_visitor(documents, document)
-                
-    #         #     for i in doc_visitors:
-    #         #         if i not in visitors:
-    #         #             doc_visitors.remove(i)
-                
-    #         #     doc_reader_count[document] = doc_visitors
-    
-    # for doc_visitors in doc_reader_count:
-    #     for visitor_count in doc_reader_count[doc_visitors]:
-    #         if visitor_count in most_common_visitors:
-    #             most_common_visitors[visitor_count] += 1
-    #         else:
-    #             most_common_visitors[visitor_count] = 1
-
-    # # most_common_visitors = dict(sorted(most_common_visitors.items(), key=lambda item: item[1], reverse=True))
-
-    # output = {}
-
-    # for document in doc_reader_count:
-    #     for visitor in doc_reader_count[document]:
-    #         if visitor in list(most_common_visitors.keys()):
-    #             if visitor not in list(output.values()):
-    #                 output[document] = [visitor]
-    #             else:
-    #                 output[document].append(visitor)
-
-    # # output_visitors = {}
-
-    # # for visitor in most_common_visitors:
-    # #     doc_to_vis_count = 0
-    # #     documents_visited = visitor_to_doc(documents, visitor)
-    # #     for doc in documents_visited:
-    # #         if doc in list(doc_reader_count.keys()):
-    # #             doc_to_vis_count += 1
-            
-
-
-    # doc_reader_count = dict(sorted(doc_reader_count.items(), key=lambda item: len(item[1]), reverse=True))
-    # most_common_visitors = dict(sorted(most_common_visitors.items(), key=lambda item: item[1], reverse=True))
-
-    # doc_reader_count = {key: doc_reader_count[key] for key in list(doc_reader_count)[:7]}
-    # # most_common_visitors = {key: doc_reader_count[key] for key in list(doc_reader_count)[:7]}
-
-
-
+    # Return the results
     return doc_counter, visitor_top_counter, doc_visitor_mapping
-
-# def also_likes(documents, doc_uuid, visitor_uuid=None, sorting_func=None):
-#     # Dictionary to store the relationship between visitors and documents
-#     visitor_doc_relationship = {}
-#     # Dictionary to store the count of readers for each document
-#     doc_reader_count = {}
-#     # Dictionary to store the count of occurrences of each visitor across all documents
-#     most_common_visitors = {}
-
-#     # Get the list of visitors for the specified document UUID
-#     visitors = doc_to_visitor(documents, doc_uuid)
-
-#     # Create a mapping between visitors and the distinct documents they visited
-#     for visitor in visitors:
-#         visitor_doc_relationship[visitor] = set(visitor_to_doc(documents, visitor))
-
-#     # Count the number of readers for each document
-#     for visited_documents in visitor_doc_relationship.values():
-#         for document in visited_documents:
-#             # Check if the document is not already in the count_dict
-#             if document not in doc_reader_count:
-#                 doc_reader_count[document] = {}
-            
-#             # Increment the count for the document and add the visitor to the list
-#             doc_reader_count[document][visitor] = doc_reader_count[document].get(visitor, 0) + 1
-
-#     # Sort the documents based on the specified sorting function
-#     if sorting_func is not None:
-#         if sorting_func == '1':
-#             doc_reader_count = sortingfunc_test(doc_reader_count, reverse=False)
-#         elif sorting_func == '2':
-#             doc_reader_count = sortingfunc_test(doc_reader_count, reverse=True)
-
-#     # Count occurrences of each visitor across all documents
-#     for visitor in visitor_doc_relationship:
-#         if doc_uuid in list(visitor_doc_relationship[visitor]):
-#             if visitor in most_common_visitors:
-#                 most_common_visitors[visitor] += 1
-#             else:
-#                 most_common_visitors[visitor] = 1
-
-#     most_common_visitors = dict(sorted(most_common_visitors.items(), key=lambda item: item[1], reverse=True))
-
-#     # Return the sorted document-reader count and the most common visitors
-#     return doc_reader_count, most_common_visitors
 
 

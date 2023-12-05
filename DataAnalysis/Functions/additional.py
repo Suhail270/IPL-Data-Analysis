@@ -45,12 +45,12 @@ Additional Feature: Sorts dictionaries in ascending/descending order based on th
 '''
 
 def sortingfunc_test(doc_reader_count, reverse):
-    if type(doc_reader_count) is dict:
+    # if type(doc_reader_count) is dict:
         # Sort the document-reader count dictionary based on the count (inner dictionary)
-        return dict(sorted(doc_reader_count.items(), key=lambda item: list(item[1].values())[0], reverse=reverse))
-    else:
-        # Sort the list of tuples based on the count
-        return sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse)
+    return dict(sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse))
+    # else:
+    #     # Sort the list of tuples based on the count
+    #     return sorted(doc_reader_count.items(), key=lambda item: item[1], reverse=reverse)
     
 def find_doc(json_data, country_count):
      
