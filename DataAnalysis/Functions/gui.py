@@ -2,7 +2,7 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from .cw_requirements import read_file, view_broswer, views_country
-from .additional import logged_in_visitors, non_logged_in_visitors
+from .additional import logged_in_visitors, non_logged_in_visitors, visitor_authenticated
 from .graphs import *
 from tkinter import filedialog
 from tkinter import ttk 
@@ -518,15 +518,40 @@ class LogInAuthenticate(tk.Frame):
         self.vis_uuid_entry = tk.Entry(self, width=50)
         self.vis_uuid_entry.pack(pady=10)
 
+        self.result_label = tk.Label(self, text="", font=("Helvetica", 12))
+        self.result_label.pack(pady=10)
+
+        buttonplot = tk.Button(self, text="Check Visitor", command=lambda: self.user_check(self.vis_uuid_entry.get()))
+        buttonplot.pack(pady=10)
+
         button1 = tk.Button(self, text="Back to Home",
                             command=lambda: self.back_to_home(controller))
         button1.pack(pady=10) 
+
+    def user_check(self, visitor_uuid):
+        documents, visitors, json_data = read_file(file_path)
+
+        result = visitor_authenticated(visitor_uuid, visitors)
+
+        result_text = "\nVisitor UUID: {uuid}\n".format(uuid=visitor_uuid)
+
+        if result is not False:
+            result_text += "The visitor is logged in.\nUsername: " + result + "\n"
+        
+        else:
+            result_text += "The visitor is not logged in.\n"
+
+        # Update the label with the result
+        self.result_label.config(text=result_text)
 
     def back_to_home(self, controller):
         # Show the home page
         controller.show_frame(HomePage)
         # Clear the text box
         self.vis_uuid_entry.delete(0, tk.END) 
+        # Clear the text box
+        self.result_text = ""
+        self.result_label.config(text=self.result_text)
 
 def get_file_path():
     file_path = filedialog.askopenfilename(title="Select a JSON file", filetypes=[("JSON files", "*.json")])
